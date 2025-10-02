@@ -1,0 +1,238 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  AGENT
+  BROKER
+  TITLE_COMPANY
+  CLIENT
+}
+
+enum TransactionStatus {
+  DRAFT
+  OFFER_SUBMITTED
+  UNDER_CONTRACT
+  INSPECTION
+  APPRAISAL
+  MORTGAGE_COMMITMENT
+  ATTORNEY_REVIEW
+  CLOSING_SCHEDULED
+  CLOSED
+  CANCELLED
+}
+
+enum DocumentType {
+  CONTRACT
+  INSPECTION_REPORT
+  APPRAISAL
+  MORTGAGE_DOCUMENT
+  TITLE_DOCUMENT
+  CLOSING_DOCUMENT
+  OTHER
+}
+
+enum NotificationType {
+  EMAIL
+  SMS
+  PUSH
+}
+
+model User {
+  id                String    @id @default(cuid())
+  clerkId           String    @unique
+  email             String    @unique
+  firstName         String
+  lastName          String
+  phone             String?
+  role              UserRole
+  companyName       String?
+  licenseNumber     String?
+  profileImageUrl   String?
+  isActive          Boolean   @default(true)
+  subscriptionId    String?
+  subscriptionStatus String?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  // Relations
+  transactions      Transaction[]
+  transactionParticipants TransactionParticipant[]
+  documents         Document[]
+  notifications     Notification[]
+  activities        Activity[]
+
+  @@map("users")
+}
+
+model Transaction {
+  id                String            @id @default(cuid())
+  title             String
+  description       String?
+  propertyAddress   String
+  propertyCity      String
+  propertyState     String            @default("NJ")
+  propertyZip       String
+  status            TransactionStatus  @default(DRAFT)
+  listingPrice      Decimal?          @db.Decimal(12, 2)
+  salePrice         Decimal?          @db.Decimal(12, 2)
+  commission        Decimal?          @db.Decimal(5, 2)
+  contractDate      DateTime?
+  closingDate       DateTime?
+  inspectionDate    DateTime?
+  appraisalDate     DateTime?
+  mortgageCommitmentDate DateTime?
+  attorneyReviewDate DateTime?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  // Relations
+  agentId           String
+  agent             User              @relation(fields: [agentId], references: [id])
+  participants      TransactionParticipant[]
+  documents         Document[]
+  activities        Activity[]
+  deadlines         Deadline[]
+  checklists        Checklist[]
+
+  @@map("transactions")
+}
+
+model TransactionParticipant {
+  id                String    @id @default(cuid())
+  transactionId     String
+  userId            String
+  role              String    // "buyer", "seller", "buyer_agent", "seller_agent", "title_company"
+  isPrimary         Boolean   @default(false)
+  createdAt         DateTime  @default(now())
+
+  // Relations
+  transaction       Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  user              User        @relation(fields: [userId], references: [id])
+
+  @@unique([transactionId, userId])
+  @@map("transaction_participants")
+}
+
+model Document {
+  id                String      @id @default(cuid())
+  transactionId     String
+  uploadedById      String
+  title             String
+  description       String?
+  type              DocumentType
+  fileName          String
+  fileUrl           String
+  fileSize          Int
+  mimeType          String
+  isRequired        Boolean     @default(false)
+  isSigned          Boolean     @default(false)
+  signedAt          DateTime?
+  signedById        String?
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  // Relations
+  transaction       Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  uploadedBy        User        @relation(fields: [uploadedById], references: [id])
+  signedBy          User?       @relation(fields: [signedById], references: [id])
+
+  @@map("documents")
+}
+
+model Activity {
+  id                String    @id @default(cuid())
+  transactionId     String
+  userId            String
+  type              String    // "status_change", "document_upload", "deadline_met", "deadline_missed", "note"
+  title             String
+  description       String?
+  metadata          Json?
+  createdAt         DateTime  @default(now())
+
+  // Relations
+  transaction       Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  user              User        @relation(fields: [userId], references: [id])
+
+  @@map("activities")
+}
+
+model Deadline {
+  id                String    @id @default(cuid())
+  transactionId     String
+  title             String
+  description       String?
+  dueDate           DateTime
+  isCompleted       Boolean   @default(false)
+  completedAt       DateTime?
+  completedById     String?
+  isCritical        Boolean   @default(false)
+  reminderSent      Boolean   @default(false)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  // Relations
+  transaction       Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  completedBy       User?       @relation(fields: [completedById], references: [id])
+
+  @@map("deadlines")
+}
+
+model Checklist {
+  id                String    @id @default(cuid())
+  transactionId     String
+  title             String
+  description       String?
+  isCompleted       Boolean   @default(false)
+  completedAt       DateTime?
+  completedById     String?
+  order             Int
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  // Relations
+  transaction       Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  completedBy       User?       @relation(fields: [completedById], references: [id])
+
+  @@map("checklists")
+}
+
+model Notification {
+  id                String           @id @default(cuid())
+  userId            String
+  type              NotificationType
+  title             String
+  message           String
+  isRead            Boolean          @default(false)
+  readAt            DateTime?
+  metadata          Json?
+  createdAt         DateTime         @default(now())
+
+  // Relations
+  user              User             @relation(fields: [userId], references: [id])
+
+  @@map("notifications")
+}
+
+model Subscription {
+  id                String    @id @default(cuid())
+  userId            String    @unique
+  stripeCustomerId  String    @unique
+  stripeSubscriptionId String @unique
+  status            String
+  planId            String
+  currentPeriodStart DateTime
+  currentPeriodEnd   DateTime
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@map("subscriptions")
+}
