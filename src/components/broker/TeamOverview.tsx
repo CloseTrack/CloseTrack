@@ -37,6 +37,7 @@ interface TeamOverviewProps {
       salePrice?: Decimal | null
       closingDate?: Date | null
       agent: {
+        id: string
         firstName: string
         lastName: string
       }
@@ -85,9 +86,9 @@ export default function TeamOverview({ data }: TeamOverviewProps) {
   ]
 
   const getAgentStats = (agentId: string) => {
-    const agentTransactions = data.transactions.filter(t => t.id === agentId)
+    const agentTransactions = data.transactions.filter(t => t.agent.id === agentId)
     const closedTransactions = agentTransactions.filter(t => t.status === 'CLOSED')
-    const totalRevenue = closedTransactions.reduce((sum, t) => sum + (t.salePrice || 0), 0)
+    const totalRevenue = closedTransactions.reduce((sum, t) => sum + (Number(t.salePrice) || 0), 0)
     
     return {
       totalTransactions: agentTransactions.length,
