@@ -60,13 +60,17 @@ model User {
   isActive          Boolean   @default(true)
   subscriptionId    String?
   subscriptionStatus String?
+  stripeCustomerId  String?
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
 
   // Relations
   transactions      Transaction[]
   transactionParticipants TransactionParticipant[]
-  documents         Document[]
+  uploadedDocuments Document[] @relation("DocumentUploadedBy")
+  signedDocuments   Document[] @relation("DocumentSignedBy")
+  completedDeadlines Deadline[] @relation("DeadlineCompletedBy")
+  completedChecklists Checklist[] @relation("ChecklistCompletedBy")
   notifications     Notification[]
   activities        Activity[]
 
@@ -142,8 +146,8 @@ model Document {
 
   // Relations
   transaction       Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
-  uploadedBy        User        @relation(fields: [uploadedById], references: [id])
-  signedBy          User?       @relation(fields: [signedById], references: [id])
+  uploadedBy        User        @relation("DocumentUploadedBy", fields: [uploadedById], references: [id])
+  signedBy          User?       @relation("DocumentSignedBy", fields: [signedById], references: [id])
 
   @@map("documents")
 }
@@ -181,7 +185,7 @@ model Deadline {
 
   // Relations
   transaction       Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
-  completedBy       User?       @relation(fields: [completedById], references: [id])
+  completedBy       User?       @relation("DeadlineCompletedBy", fields: [completedById], references: [id])
 
   @@map("deadlines")
 }
@@ -200,7 +204,7 @@ model Checklist {
 
   // Relations
   transaction       Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
-  completedBy       User?       @relation(fields: [completedById], references: [id])
+  completedBy       User?       @relation("ChecklistCompletedBy", fields: [completedById], references: [id])
 
   @@map("checklists")
 }

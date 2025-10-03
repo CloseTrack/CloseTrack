@@ -15,6 +15,7 @@ import {
   Cell
 } from 'recharts'
 import { TrendingUp, TrendingDown, DollarSign, Calendar } from 'lucide-react'
+import { Decimal } from '@prisma/client/runtime/library'
 
 interface TeamAnalyticsProps {
   data: {
@@ -29,14 +30,14 @@ interface TeamAnalyticsProps {
     transactions: Array<{
       id: string
       status: string
-      salePrice?: number
+      salePrice?: Decimal | null
       createdAt: Date
       agent: {
         firstName: string
         lastName: string
       }
     }>
-    totalRevenue: number
+    totalRevenue: number | Decimal
     complianceRate: number
   }
 }
@@ -46,7 +47,7 @@ export default function TeamAnalytics({ data }: TeamAnalyticsProps) {
   const agentPerformance = data.agents.map(agent => {
     const agentTransactions = data.transactions.filter(t => t.agent.firstName === agent.firstName)
     const closedTransactions = agentTransactions.filter(t => t.status === 'CLOSED')
-    const revenue = closedTransactions.reduce((sum, t) => sum + (t.salePrice || 0), 0)
+    const revenue = closedTransactions.reduce((sum, t) => sum + (Number(t.salePrice) || 0), 0)
     
     return {
       name: `${agent.firstName} ${agent.lastName}`,
@@ -82,7 +83,7 @@ export default function TeamAnalytics({ data }: TeamAnalyticsProps) {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Total Revenue</p>
-              <p className="text-2xl font-bold text-gray-900">${data.totalRevenue.toLocaleString()}</p>
+              <p className="text-2xl font-bold text-gray-900">${Number(data.totalRevenue).toLocaleString()}</p>
             </div>
             <div className="p-3 bg-green-100 rounded-full">
               <TrendingUp className="w-6 h-6 text-green-600" />

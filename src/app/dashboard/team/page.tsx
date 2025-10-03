@@ -36,7 +36,7 @@ export default async function TeamPage() {
       include: {
         agent: {
           select: {
-            firstName: true
+            firstName: true,
             lastName: true
           }
         }

@@ -18,26 +18,27 @@ import {
   Download
 } from 'lucide-react'
 import { formatCurrency, formatDate, formatDateTime, getStatusColor, calculateDaysUntilDeadline } from '@/lib/utils'
+import { Decimal } from '@prisma/client/runtime/library'
 
 interface TransactionDetailsProps {
   transaction: {
     id: string
     title: string
-    description?: string
+    description?: string | null
     status: string
     propertyAddress: string
     propertyCity: string
     propertyState: string
     propertyZip: string
-    listingPrice?: number
-    salePrice?: number
-    commission?: number
-    contractDate?: Date
-    closingDate?: Date
-    inspectionDate?: Date
-    appraisalDate?: Date
-    mortgageCommitmentDate?: Date
-    attorneyReviewDate?: Date
+    listingPrice?: Decimal | null
+    salePrice?: Decimal | null
+    commission?: Decimal | null
+    contractDate?: Date | null
+    closingDate?: Date | null
+    inspectionDate?: Date | null
+    appraisalDate?: Date | null
+    mortgageCommitmentDate?: Date | null
+    attorneyReviewDate?: Date | null
     createdAt: Date
     updatedAt: Date
     agent: {
@@ -45,7 +46,7 @@ interface TransactionDetailsProps {
       firstName: string
       lastName: string
       email: string
-      phone?: string
+      phone?: string | null
     }
     participants: Array<{
       id: string
@@ -56,14 +57,14 @@ interface TransactionDetailsProps {
         firstName: string
         lastName: string
         email: string
-        phone?: string
+        phone?: string | null
         role: string
       }
     }>
     documents: Array<{
       id: string
       title: string
-      description?: string
+      description?: string | null
       type: string
       fileName: string
       fileUrl: string
@@ -71,7 +72,7 @@ interface TransactionDetailsProps {
       mimeType: string
       isRequired: boolean
       isSigned: boolean
-      signedAt?: Date
+      signedAt?: Date | null
       createdAt: Date
       uploadedBy: {
         firstName: string

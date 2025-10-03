@@ -1,8 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { Bell, Search, UserButton } from '@clerk/nextjs'
-import { Menu, X } from 'lucide-react'
+import { UserButton } from '@clerk/nextjs'
+import { Bell, Search, Menu, X } from 'lucide-react'
 
 interface DashboardHeaderProps {
   user: {

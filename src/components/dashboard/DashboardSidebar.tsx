@@ -25,7 +25,7 @@ interface DashboardSidebarProps {
     firstName: string
     lastName: string
     role: string
-    profileImageUrl?: string
+    profileImageUrl?: string | null
   }
 }
 

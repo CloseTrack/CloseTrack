@@ -30,10 +30,10 @@ export default async function TransactionPage({ params }: TransactionPageProps) 
     include: {
       agent: {
         select: {
-          id: true
-          firstName: true
-          lastName: true
-          email: true
+          id: true,
+          firstName: true,
+          lastName: true,
+          email: true,
           phone: true
         }
       },
@@ -41,11 +41,11 @@ export default async function TransactionPage({ params }: TransactionPageProps) 
         include: {
           user: {
             select: {
-              id: true
-              firstName: true
-              lastName: true
-              email: true
-              phone: true
+              id: true,
+              firstName: true,
+              lastName: true,
+              email: true,
+              phone: true,
               role: true
             }
           }
@@ -55,7 +55,7 @@ export default async function TransactionPage({ params }: TransactionPageProps) 
         include: {
           uploadedBy: {
             select: {
-              firstName: true
+              firstName: true,
               lastName: true
             }
           }
@@ -66,12 +66,12 @@ export default async function TransactionPage({ params }: TransactionPageProps) 
       },
       deadlines: {
         include: {
-          completedBy: {
-            select: {
-              firstName: true
-              lastName: true
-            }
+        completedBy: {
+          select: {
+            firstName: true,
+            lastName: true
           }
+        }
         },
         orderBy: {
           dueDate: 'asc'
@@ -79,12 +79,12 @@ export default async function TransactionPage({ params }: TransactionPageProps) 
       },
       checklists: {
         include: {
-          completedBy: {
-            select: {
-              firstName: true
-              lastName: true
-            }
+        completedBy: {
+          select: {
+            firstName: true,
+            lastName: true
           }
+        }
         },
         orderBy: {
           order: 'asc'
@@ -94,7 +94,7 @@ export default async function TransactionPage({ params }: TransactionPageProps) 
         include: {
           user: {
             select: {
-              firstName: true
+              firstName: true,
               lastName: true
             }
           }

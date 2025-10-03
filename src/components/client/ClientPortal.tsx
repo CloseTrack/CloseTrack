@@ -17,27 +17,28 @@ import {
   Mail
 } from 'lucide-react'
 import { formatCurrency, formatDate, formatDateTime, getStatusColor, calculateDaysUntilDeadline } from '@/lib/utils'
+import { Decimal } from '@prisma/client/runtime/library'
 
 interface ClientPortalProps {
   transactions: Array<{
     id: string
     title: string
-    description?: string
+    description?: string | null
     status: string
     propertyAddress: string
     propertyCity: string
     propertyState: string
     propertyZip: string
-    salePrice?: number
-    contractDate?: Date
-    closingDate?: Date
+    salePrice?: Decimal | null
+    contractDate?: Date | null
+    closingDate?: Date | null
     createdAt: Date
     updatedAt: Date
     agent: {
       firstName: string
       lastName: string
       email: string
-      phone?: string
+      phone?: string | null
     }
     participants: Array<{
       id: string
@@ -68,7 +69,7 @@ interface ClientPortalProps {
       id: string
       type: string
       title: string
-      description?: string
+      description?: string | null
       createdAt: Date
       user: {
         firstName: string
@@ -179,7 +180,7 @@ export default function ClientPortal({ transactions, user }: ClientPortalProps) 
                   {currentTransaction.salePrice && (
                     <div className="flex items-center space-x-1">
                       <DollarSign className="w-4 h-4" />
-                      <span>{formatCurrency(currentTransaction.salePrice)}</span>
+                      <span>{formatCurrency(Number(currentTransaction.salePrice))}</span>
                     </div>
                   )}
                 </div>

@@ -11,17 +11,18 @@ import {
   Users
 } from 'lucide-react'
 import { formatCurrency, formatDateTime } from '@/lib/utils'
+import { Decimal } from '@prisma/client/runtime/library'
 
 interface DashboardOverviewProps {
   data: {
     activeTransactions: number
-    totalRevenue: number
+    totalRevenue: number | Decimal
     upcomingDeadlines: number
     recentActivities: Array<{
       id: string
       type: string
       title: string
-      description?: string
+      description?: string | null
       createdAt: Date
       transaction: {
         id: string
@@ -48,7 +49,7 @@ export default function DashboardOverview({ data, userRole }: DashboardOverviewP
     },
     {
       name: 'Total Revenue',
-      value: formatCurrency(data.totalRevenue),
+      value: formatCurrency(Number(data.totalRevenue)),
       icon: DollarSign,
       color: 'green',
       change: '+23%',

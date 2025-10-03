@@ -20,11 +20,11 @@ interface SettingsPageProps {
     firstName: string
     lastName: string
     email: string
-    phone?: string
+    phone?: string | null
     role: string
-    companyName?: string
-    licenseNumber?: string
-    profileImageUrl?: string
+    companyName?: string | null
+    licenseNumber?: string | null
+    profileImageUrl?: string | null
   }
   subscription: {
     id: string

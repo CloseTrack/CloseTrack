@@ -17,9 +17,9 @@ export default async function ClientPortalPage() {
     include: {
       agent: {
         select: {
-          firstName: true
-          lastName: true
-          email: true
+          firstName: true,
+          lastName: true,
+          email: true,
           phone: true
         }
       },
@@ -27,8 +27,8 @@ export default async function ClientPortalPage() {
         include: {
           user: {
             select: {
-              firstName: true
-              lastName: true
+              firstName: true,
+              lastName: true,
               role: true
             }
           }
@@ -42,11 +42,11 @@ export default async function ClientPortalPage() {
           }
         },
         select: {
-          id: true
-          title: true
-          type: true
-          fileName: true
-          createdAt: true
+          id: true,
+          title: true,
+          type: true,
+          fileName: true,
+          createdAt: true,
           isSigned: true
         }
       },
@@ -58,10 +58,10 @@ export default async function ClientPortalPage() {
           }
         },
         select: {
-          id: true
-          title: true
-          dueDate: true
-          isCompleted: true
+          id: true,
+          title: true,
+          dueDate: true,
+          isCompleted: true,
           isCritical: true
         }
       },
@@ -73,14 +73,14 @@ export default async function ClientPortalPage() {
           }
         },
         select: {
-          id: true
-          type: true
-          title: true
-          description: true
-          createdAt: true
+          id: true,
+          type: true,
+          title: true,
+          description: true,
+          createdAt: true,
           user: {
             select: {
-              firstName: true
+              firstName: true,
               lastName: true
             }
           }

@@ -15,6 +15,7 @@ import {
   Phone
 } from 'lucide-react'
 import { formatCurrency, formatDate } from '@/lib/utils'
+import { Decimal } from '@prisma/client/runtime/library'
 
 interface TeamOverviewProps {
   data: {
@@ -23,7 +24,7 @@ interface TeamOverviewProps {
       firstName: string
       lastName: string
       email: string
-      phone?: string
+      phone?: string | null
       createdAt: Date
       _count: {
         transactions: number
@@ -33,14 +34,14 @@ interface TeamOverviewProps {
       id: string
       title: string
       status: string
-      salePrice?: number
-      closingDate?: Date
+      salePrice?: Decimal | null
+      closingDate?: Date | null
       agent: {
         firstName: string
         lastName: string
       }
     }>
-    totalRevenue: number
+    totalRevenue: number | Decimal
     complianceRate: number
   }
 }
@@ -59,7 +60,7 @@ export default function TeamOverview({ data }: TeamOverviewProps) {
     },
     {
       name: 'Team Revenue',
-      value: formatCurrency(data.totalRevenue),
+      value: formatCurrency(Number(data.totalRevenue)),
       icon: DollarSign,
       color: 'green',
       change: '+15%',
