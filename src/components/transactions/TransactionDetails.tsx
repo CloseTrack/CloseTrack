@@ -271,7 +271,7 @@ export default function TransactionDetails({ transaction, user }: TransactionDet
                   {transaction.commission && (
                     <div>
                       <label className="text-sm font-medium text-gray-500">Commission</label>
-                      <p className="text-gray-900">{transaction.commission}%</p>
+                      <p className="text-gray-900">{Number(transaction.commission)}%</p>
                     </div>
                   )}
                   {transaction.contractDate && (
