@@ -176,7 +176,7 @@ export default function TransactionDetails({ transaction, user }: TransactionDet
             {transaction.salePrice && (
               <div className="flex items-center space-x-1">
                 <DollarSign className="w-4 h-4" />
-                <span>{formatCurrency(transaction.salePrice)}</span>
+                <span>{formatCurrency(Number(transaction.salePrice))}</span>
               </div>
             )}
           </div>
@@ -259,13 +259,13 @@ export default function TransactionDetails({ transaction, user }: TransactionDet
                   {transaction.listingPrice && (
                     <div>
                       <label className="text-sm font-medium text-gray-500">Listing Price</label>
-                      <p className="text-gray-900">{formatCurrency(transaction.listingPrice)}</p>
+                      <p className="text-gray-900">{formatCurrency(Number(transaction.listingPrice))}</p>
                     </div>
                   )}
                   {transaction.salePrice && (
                     <div>
                       <label className="text-sm font-medium text-gray-500">Sale Price</label>
-                      <p className="text-gray-900">{formatCurrency(transaction.salePrice)}</p>
+                      <p className="text-gray-900">{formatCurrency(Number(transaction.salePrice))}</p>
                     </div>
                   )}
                   {transaction.commission && (
