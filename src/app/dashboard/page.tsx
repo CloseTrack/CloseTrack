@@ -27,7 +27,7 @@ export default async function DashboardPage() {
         status: 'CLOSED'
       },
       _sum: {
-        commission: true
+        salePrice: true
       }
     }),
     prisma.deadline.count({
@@ -60,7 +60,7 @@ export default async function DashboardPage() {
 
   const dashboardData = {
     activeTransactions,
-    totalRevenue: totalRevenue._sum.commission || 0,
+    totalRevenue: totalRevenue._sum.salePrice || 0,
     upcomingDeadlines,
     recentActivities
   }

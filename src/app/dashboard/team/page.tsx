@@ -50,7 +50,7 @@ export default async function TeamPage() {
         status: 'CLOSED'
       },
       _sum: {
-        commission: true
+        salePrice: true
       }
     }),
     prisma.deadline.groupBy({
@@ -71,7 +71,7 @@ export default async function TeamPage() {
   const teamData = {
     agents,
     transactions: teamTransactions,
-    totalRevenue: teamRevenue._sum.commission || 0,
+    totalRevenue: teamRevenue._sum.salePrice || 0,
     complianceRate: complianceStats.find(stat => stat.isCompleted)?._count.isCompleted || 0
   }
 

@@ -13,6 +13,7 @@ import {
   MoreVertical
 } from 'lucide-react'
 import { formatCurrency, formatDate, getStatusColor, calculateDaysUntilDeadline } from '@/lib/utils'
+import { Decimal } from '@prisma/client/runtime/library'
 
 interface TransactionListProps {
   transactions: Array<{
@@ -22,9 +23,9 @@ interface TransactionListProps {
     propertyAddress: string
     propertyCity: string
     propertyState: string
-    salePrice?: number
-    contractDate?: Date
-    closingDate?: Date
+    salePrice?: Decimal | null
+    contractDate?: Date | null
+    closingDate?: Date | null
     agent: {
       firstName: string
       lastName: string
@@ -148,7 +149,7 @@ export default function TransactionList({ transactions, userRole }: TransactionL
                   <div className="flex items-center space-x-2">
                     <DollarSign className="w-4 h-4 text-gray-400" />
                     <span className="text-sm text-gray-600">
-                      {formatCurrency(transaction.salePrice)}
+                      {formatCurrency(Number(transaction.salePrice))}
                     </span>
                   </div>
                 )}
