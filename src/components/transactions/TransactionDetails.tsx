@@ -82,34 +82,34 @@ interface TransactionDetailsProps {
     deadlines: Array<{
       id: string
       title: string
-      description?: string
+      description?: string | null
       dueDate: Date
       isCompleted: boolean
-      completedAt?: Date
+      completedAt?: Date | null
       isCritical: boolean
       reminderSent: boolean
       completedBy?: {
         firstName: string
         lastName: string
-      }
+      } | null
     }>
     checklists: Array<{
       id: string
       title: string
-      description?: string
+      description?: string | null
       isCompleted: boolean
-      completedAt?: Date
+      completedAt?: Date | null
       order: number
       completedBy?: {
         firstName: string
         lastName: string
-      }
+      } | null
     }>
     activities: Array<{
       id: string
       type: string
       title: string
-      description?: string
+      description?: string | null
       metadata?: any
       createdAt: Date
       user: {
