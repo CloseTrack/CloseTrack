@@ -252,7 +252,7 @@ export default function TeamOverview({ data }: TeamOverviewProps) {
                 </div>
                 <div className="text-right">
                   <p className="text-sm font-medium text-gray-900">
-                    {transaction.salePrice ? formatCurrency(transaction.salePrice) : 'N/A'}
+                    {transaction.salePrice ? formatCurrency(Number(transaction.salePrice)) : 'N/A'}
                   </p>
                   <p className="text-xs text-gray-500">
                     {transaction.closingDate ? formatDate(transaction.closingDate) : 'No date'}
