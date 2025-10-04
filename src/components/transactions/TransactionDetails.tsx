@@ -43,8 +43,8 @@ interface TransactionDetailsProps {
     updatedAt: Date
     agent: {
       id: string
-      firstName: string
-      lastName: string
+      firstName: string | null
+      lastName: string | null
       email: string
       phone?: string | null
     }
@@ -54,8 +54,8 @@ interface TransactionDetailsProps {
       isPrimary: boolean
       user: {
         id: string
-        firstName: string
-        lastName: string
+        firstName: string | null | null
+        lastName: string | null | null
         email: string
         phone?: string | null
         role: string
@@ -75,8 +75,8 @@ interface TransactionDetailsProps {
       signedAt?: Date | null
       createdAt: Date
       uploadedBy: {
-        firstName: string
-        lastName: string
+        firstName: string | null | null
+        lastName: string | null | null
       }
     }>
     deadlines: Array<{
@@ -89,8 +89,8 @@ interface TransactionDetailsProps {
       isCritical: boolean
       reminderSent: boolean
       completedBy?: {
-        firstName: string
-        lastName: string
+        firstName: string | null | null
+        lastName: string | null | null
       } | null
     }>
     checklists: Array<{
@@ -101,8 +101,8 @@ interface TransactionDetailsProps {
       completedAt?: Date | null
       order: number
       completedBy?: {
-        firstName: string
-        lastName: string
+        firstName: string | null | null
+        lastName: string | null | null
       } | null
     }>
     activities: Array<{
@@ -113,8 +113,8 @@ interface TransactionDetailsProps {
       metadata?: any
       createdAt: Date
       user: {
-        firstName: string
-        lastName: string
+        firstName: string | null | null
+        lastName: string | null | null
       }
     }>
   }
@@ -304,7 +304,7 @@ export default function TransactionDetails({ transaction, user }: TransactionDet
                           <p className="text-sm text-gray-600">{activity.description}</p>
                         )}
                         <p className="text-xs text-gray-500 mt-1">
-                          {formatDateTime(activity.createdAt)} • {activity.user.firstName} {activity.user.lastName}
+                          {formatDateTime(activity.createdAt)} • {activity.user.firstName || 'User'} {activity.user.lastName || 'Name'}
                         </p>
                       </div>
                     </div>
@@ -320,11 +320,11 @@ export default function TransactionDetails({ transaction, user }: TransactionDet
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Agent</h3>
                 <div className="flex items-center space-x-3">
                   <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center text-white font-semibold">
-                    {transaction.agent.firstName.charAt(0)}{transaction.agent.lastName.charAt(0)}
+                    {(transaction.agent.firstName || 'A').charAt(0)}{(transaction.agent.lastName || 'A').charAt(0)}
                   </div>
                   <div>
                     <p className="font-medium text-gray-900">
-                      {transaction.agent.firstName} {transaction.agent.lastName}
+                      {transaction.agent.firstName || 'Agent'} {transaction.agent.lastName || 'Name'}
                     </p>
                     <p className="text-sm text-gray-600">{transaction.agent.email}</p>
                     {transaction.agent.phone && (
@@ -387,7 +387,7 @@ export default function TransactionDetails({ transaction, user }: TransactionDet
                     </div>
                   </div>
                   <div className="text-xs text-gray-500">
-                    Uploaded by {document.uploadedBy.firstName} {document.uploadedBy.lastName}
+                    Uploaded by {document.uploadedBy.firstName || 'User'} {document.uploadedBy.lastName || 'Name'}
                   </div>
                   <div className="text-xs text-gray-500">
                     {formatDateTime(document.createdAt)}
@@ -429,7 +429,7 @@ export default function TransactionDetails({ transaction, user }: TransactionDet
                         <p className="text-sm font-medium text-gray-900">{formatDate(deadline.dueDate)}</p>
                         <p className="text-xs text-gray-500">
                           {deadline.isCompleted 
-                            ? `Completed by ${deadline.completedBy?.firstName} ${deadline.completedBy?.lastName}`
+                            ? `Completed by ${deadline.completedBy?.firstName || 'User'} ${deadline.completedBy?.lastName || 'Name'}`
                             : isOverdue 
                             ? `${Math.abs(daysUntil)} days overdue`
                             : `${daysUntil} days left`

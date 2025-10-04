@@ -21,8 +21,8 @@ interface TeamAnalyticsProps {
   data: {
     agents: Array<{
       id: string
-      firstName: string
-      lastName: string
+      firstName: string | null
+      lastName: string | null
       _count: {
         transactions: number
       }
@@ -33,8 +33,8 @@ interface TeamAnalyticsProps {
       salePrice?: Decimal | null
       createdAt: Date
       agent: {
-        firstName: string
-        lastName: string
+        firstName: string | null | null
+        lastName: string | null | null
       }
     }>
     totalRevenue: number | Decimal
@@ -45,12 +45,12 @@ interface TeamAnalyticsProps {
 export default function TeamAnalytics({ data }: TeamAnalyticsProps) {
   // Prepare data for charts
   const agentPerformance = data.agents.map(agent => {
-    const agentTransactions = data.transactions.filter(t => t.agent.firstName === agent.firstName)
+    const agentTransactions = data.transactions.filter(t => (t.agent.firstName || '') === (agent.firstName || ''))
     const closedTransactions = agentTransactions.filter(t => t.status === 'CLOSED')
     const revenue = closedTransactions.reduce((sum, t) => sum + (Number(t.salePrice) || 0), 0)
     
     return {
-      name: `${agent.firstName} ${agent.lastName}`,
+      name: `${agent.firstName || 'Agent'} ${agent.lastName || 'Name'}`,
       transactions: agentTransactions.length,
       revenue: revenue,
       completionRate: agentTransactions.length > 0 ? (closedTransactions.length / agentTransactions.length) * 100 : 0

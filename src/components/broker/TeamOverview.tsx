@@ -21,8 +21,8 @@ interface TeamOverviewProps {
   data: {
     agents: Array<{
       id: string
-      firstName: string
-      lastName: string
+      firstName: string | null
+      lastName: string | null
       email: string
       phone?: string | null
       createdAt: Date
@@ -38,8 +38,8 @@ interface TeamOverviewProps {
       closingDate?: Date | null
       agent: {
         id: string
-        firstName: string
-        lastName: string
+        firstName: string | null | null
+        lastName: string | null | null
       }
     }>
     totalRevenue: number | Decimal
@@ -179,11 +179,11 @@ export default function TeamOverview({ data }: TeamOverviewProps) {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center text-white font-semibold mr-4">
-                          {agent.firstName.charAt(0)}{agent.lastName.charAt(0)}
+                          {(agent.firstName || 'A').charAt(0)}{(agent.lastName || 'A').charAt(0)}
                         </div>
                         <div>
                           <div className="text-sm font-medium text-gray-900">
-                            {agent.firstName} {agent.lastName}
+                            {agent.firstName || 'Agent'} {agent.lastName || 'Name'}
                           </div>
                           <div className="text-sm text-gray-500">{agent.email}</div>
                         </div>
@@ -247,7 +247,7 @@ export default function TeamOverview({ data }: TeamOverviewProps) {
                     {transaction.title}
                   </p>
                   <p className="text-sm text-gray-500">
-                    Agent: {transaction.agent.firstName} {transaction.agent.lastName}
+                    Agent: {transaction.agent.firstName || 'Agent'} {transaction.agent.lastName || 'Name'}
                   </p>
                 </div>
                 <div className="text-right">

@@ -27,14 +27,14 @@ interface TransactionListProps {
     contractDate?: Date | null
     closingDate?: Date | null
     agent: {
-      firstName: string
-      lastName: string
+      firstName: string | null
+      lastName: string | null
     }
     participants: Array<{
       role: string
       user: {
-        firstName: string
-        lastName: string
+        firstName: string | null | null
+        lastName: string | null | null
         role: string
       }
     }>
@@ -166,7 +166,7 @@ export default function TransactionList({ transactions, userRole }: TransactionL
                 <div className="flex items-center space-x-2">
                   <Users className="w-4 h-4 text-gray-400" />
                   <span className="text-sm text-gray-600">
-                    Agent: {transaction.agent.firstName} {transaction.agent.lastName}
+                    Agent: {transaction.agent.firstName || 'Agent'} {transaction.agent.lastName || 'Name'}
                   </span>
                 </div>
               </div>
@@ -193,9 +193,9 @@ export default function TransactionList({ transactions, userRole }: TransactionL
                       <div
                         key={index}
                         className="w-8 h-8 bg-gradient-to-r from-blue-400 to-indigo-500 rounded-full flex items-center justify-center text-white text-xs font-semibold border-2 border-white"
-                        title={`${participant.user.firstName} ${participant.user.lastName} (${participant.role})`}
+                        title={`${participant.user.firstName || 'User'} ${participant.user.lastName || 'Name'} (${participant.role})`}
                       >
-                        {participant.user.firstName.charAt(0)}{participant.user.lastName.charAt(0)}
+                        {(participant.user.firstName || 'U').charAt(0)}{(participant.user.lastName || 'N').charAt(0)}
                       </div>
                     ))}
                     {transaction.participants.length > 3 && (

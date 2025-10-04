@@ -29,8 +29,8 @@ interface DashboardOverviewProps {
         title: string
       }
       user: {
-        firstName: string
-        lastName: string
+        firstName: string | null
+        lastName: string | null
       }
     }>
   }
@@ -174,7 +174,7 @@ export default function DashboardOverview({ data, userRole }: DashboardOverviewP
                         {activity.description || activity.transaction.title}
                       </p>
                       <p className="text-xs text-gray-500">
-                        {formatDateTime(activity.createdAt)} • {activity.user.firstName} {activity.user.lastName}
+                        {formatDateTime(activity.createdAt)} • {activity.user.firstName || 'User'} {activity.user.lastName || 'Name'}
                       </p>
                     </div>
                   </div>
