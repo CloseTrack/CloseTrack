@@ -22,8 +22,8 @@ import { cn } from '@/lib/utils'
 interface DashboardSidebarProps {
   user: {
     id: string
-    firstName: string
-    lastName: string
+    firstName: string | null
+    lastName: string | null
     role: string
     profileImageUrl?: string | null
   }
@@ -157,19 +157,19 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
               {user.profileImageUrl ? (
                 <img
                   src={user.profileImageUrl}
-                  alt={`${user.firstName} ${user.lastName}`}
+                  alt={`${user.firstName || 'User'} ${user.lastName || 'Name'}`}
                   className="w-10 h-10 rounded-full object-cover"
                 />
               ) : (
                 <span className="text-white font-semibold text-sm">
-                  {user.firstName.charAt(0)}{user.lastName.charAt(0)}
+                  {(user.firstName || 'U').charAt(0)}{(user.lastName || 'N').charAt(0)}
                 </span>
               )}
             </div>
             {!isCollapsed && (
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-gray-900 truncate">
-                  {user.firstName} {user.lastName}
+                  {user.firstName || 'User'} {user.lastName || 'Name'}
                 </p>
                 <div className="flex items-center space-x-1">
                   <RoleIcon className="w-3 h-3 text-gray-500" />

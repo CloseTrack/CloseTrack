@@ -7,8 +7,8 @@ import { Bell, Search, Menu, X } from 'lucide-react'
 interface DashboardHeaderProps {
   user: {
     id: string
-    firstName: string
-    lastName: string
+    firstName: string | null
+    lastName: string | null
     role: string
   }
 }
@@ -59,7 +59,7 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
             <div className="flex items-center space-x-3">
               <div className="hidden md:block text-right">
                 <p className="text-sm font-medium text-gray-900">
-                  {user.firstName} {user.lastName}
+                  {user.firstName || 'User'} {user.lastName || 'Name'}
                 </p>
                 <p className="text-xs text-gray-500">
                   {user.role.replace('_', ' ')}

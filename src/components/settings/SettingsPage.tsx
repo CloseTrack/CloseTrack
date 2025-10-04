@@ -17,8 +17,8 @@ import BillingPortalButton from '@/components/stripe/BillingPortalButton'
 interface SettingsPageProps {
   user: {
     id: string
-    firstName: string
-    lastName: string
+    firstName: string | null
+    lastName: string | null
     email: string
     phone?: string | null
     role: string
@@ -39,8 +39,8 @@ export default function SettingsPage({ user, subscription }: SettingsPageProps) 
   const [activeTab, setActiveTab] = useState('profile')
   const [isEditing, setIsEditing] = useState(false)
   const [formData, setFormData] = useState({
-    firstName: user.firstName,
-    lastName: user.lastName,
+    firstName: user.firstName || '',
+    lastName: user.lastName || '',
     email: user.email,
     phone: user.phone || '',
     companyName: user.companyName || '',
@@ -77,8 +77,8 @@ export default function SettingsPage({ user, subscription }: SettingsPageProps) 
 
   const handleCancel = () => {
     setFormData({
-      firstName: user.firstName,
-      lastName: user.lastName,
+      firstName: user.firstName || '',
+      lastName: user.lastName || '',
       email: user.email,
       phone: user.phone || '',
       companyName: user.companyName || '',
@@ -261,13 +261,13 @@ export default function SettingsPage({ user, subscription }: SettingsPageProps) 
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         First Name
                       </label>
-                      <p className="text-gray-900">{user.firstName}</p>
+                      <p className="text-gray-900">{user.firstName || 'Not set'}</p>
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Last Name
                       </label>
-                      <p className="text-gray-900">{user.lastName}</p>
+                      <p className="text-gray-900">{user.lastName || 'Not set'}</p>
                     </div>
                   </div>
 

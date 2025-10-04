@@ -79,8 +79,8 @@ interface ClientPortalProps {
   }>
   user: {
     id: string
-    firstName: string
-    lastName: string
+    firstName: string | null
+    lastName: string | null
     role: string
   }
 }
