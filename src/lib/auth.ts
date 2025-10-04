@@ -27,7 +27,7 @@ export async function getCurrentUser() {
           email: clerkUser.emailAddresses[0]?.emailAddress || '',
           firstName: clerkUser.firstName || 'User',
           lastName: clerkUser.lastName || 'Name',
-          role: 'AGENT',
+          role: 'real_estate_agent',
           isTemporary: true
         }
       }
@@ -46,7 +46,7 @@ export async function getCurrentUser() {
               email: clerkUser.emailAddresses[0]?.emailAddress || '',
               firstName: clerkUser.firstName || 'User',
               lastName: clerkUser.lastName || 'Name',
-              role: 'AGENT', // Default role
+              role: 'real_estate_agent', // Default role
             },
           })
           console.log('Created user in database:', user.email)
@@ -59,7 +59,7 @@ export async function getCurrentUser() {
             email: clerkUser.emailAddresses[0]?.emailAddress || '',
             firstName: clerkUser.firstName || 'User',
             lastName: clerkUser.lastName || 'Name',
-            role: 'AGENT',
+            role: 'real_estate_agent',
             isTemporary: true
           }
         }

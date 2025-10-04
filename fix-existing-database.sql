@@ -18,9 +18,7 @@ ADD COLUMN IF NOT EXISTS "stripeCustomerId" TEXT,
 ADD COLUMN IF NOT EXISTS "createdAt" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
 ADD COLUMN IF NOT EXISTS "updatedAt" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP;
 
--- Update the role enum to match our app
--- First, let's see what roles exist
--- We need to map the existing roles to our app's roles
+-- Update the existing data
 UPDATE user_profiles 
 SET 
   "firstName" = SPLIT_PART(full_name, ' ', 1),
@@ -29,16 +27,6 @@ SET
   "isActive" = true,
   "createdAt" = CURRENT_TIMESTAMP,
   "updatedAt" = CURRENT_TIMESTAMP;
-
--- Map existing roles to our app roles
-UPDATE user_profiles 
-SET role = CASE 
-  WHEN role = 'real_estate_agent' THEN 'AGENT'
-  WHEN role = 'buyer' THEN 'CLIENT'
-  WHEN role = 'seller' THEN 'CLIENT'
-  WHEN role = 'title_insurance_agent' THEN 'TITLE_COMPANY'
-  ELSE 'AGENT'
-END;
 
 -- Create the other tables we need
 CREATE TABLE IF NOT EXISTS "transactions" (
