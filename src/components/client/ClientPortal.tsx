@@ -35,8 +35,8 @@ interface ClientPortalProps {
     createdAt: Date
     updatedAt: Date
     agent: {
-      firstName: string
-      lastName: string
+      firstName: string | null
+      lastName: string | null
       email: string
       phone?: string | null
     }
@@ -45,8 +45,8 @@ interface ClientPortalProps {
       role: string
       isPrimary: boolean
       user: {
-        firstName: string
-        lastName: string
+        firstName: string | null
+        lastName: string | null
         role: string
       }
     }>
@@ -72,8 +72,8 @@ interface ClientPortalProps {
       description?: string | null
       createdAt: Date
       user: {
-        firstName: string
-        lastName: string
+        firstName: string | null
+        lastName: string | null
       }
     }>
   }>
@@ -351,11 +351,11 @@ export default function ClientPortal({ transactions, user }: ClientPortalProps) 
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Your Agent</h3>
                 <div className="flex items-center space-x-3 mb-4">
                   <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center text-white font-semibold">
-                    {currentTransaction.agent.firstName.charAt(0)}{currentTransaction.agent.lastName.charAt(0)}
+                    {(currentTransaction.agent.firstName || 'A').charAt(0)}{(currentTransaction.agent.lastName || 'A').charAt(0)}
                   </div>
                   <div>
                     <h4 className="font-medium text-gray-900">
-                      {currentTransaction.agent.firstName} {currentTransaction.agent.lastName}
+                      {currentTransaction.agent.firstName || 'Agent'} {currentTransaction.agent.lastName || 'Name'}
                     </h4>
                     <p className="text-sm text-gray-600">Your Real Estate Agent</p>
                   </div>
@@ -398,7 +398,7 @@ export default function ClientPortal({ transactions, user }: ClientPortalProps) 
                               <p className="text-sm text-gray-600">{activity.description}</p>
                             )}
                             <p className="text-xs text-gray-500 mt-1">
-                              {formatDateTime(activity.createdAt)} • {activity.user.firstName} {activity.user.lastName}
+                              {formatDateTime(activity.createdAt)} • {activity.user.firstName || 'User'} {activity.user.lastName || 'Name'}
                             </p>
                           </div>
                         </div>
