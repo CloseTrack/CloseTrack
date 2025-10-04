@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
           email: 'test@example.com',
           firstName: 'Test',
           lastName: 'User',
-          role: 'AGENT'
+          role: 'real_estate_agent'
         }
       })
       
