@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
           email: email_addresses[0].email_address,
           firstName: first_name || 'User',
           lastName: last_name || 'Name',
-          role: 'AGENT', // Default role
+          role: 'real_estate_agent', // Default role
         },
       })
 

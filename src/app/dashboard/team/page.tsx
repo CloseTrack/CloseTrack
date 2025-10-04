@@ -16,7 +16,7 @@ export default async function TeamPage() {
     // Get all agents (this would need proper broker-agent relationship in real implementation)
     prisma.user.findMany({
       where: {
-        role: 'AGENT',
+        role: 'real_estate_agent',
         isActive: true
       },
       include: {
@@ -30,7 +30,7 @@ export default async function TeamPage() {
     prisma.transaction.findMany({
       where: {
         agent: {
-          role: 'AGENT'
+          role: 'real_estate_agent'
         }
       },
       include: {
@@ -46,7 +46,7 @@ export default async function TeamPage() {
     prisma.transaction.aggregate({
       where: {
         agent: {
-          role: 'AGENT'
+          role: 'real_estate_agent'
         },
         status: 'CLOSED'
       },
@@ -59,7 +59,7 @@ export default async function TeamPage() {
       where: {
         transaction: {
           agent: {
-            role: 'AGENT'
+            role: 'real_estate_agent'
           }
         }
       },

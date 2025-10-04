@@ -216,7 +216,7 @@ export default function SettingsPage({ user, subscription }: SettingsPageProps) 
                     />
                   </div>
 
-                  {user.role === 'AGENT' && (
+                  {user.role === 'real_estate_agent' && (
                     <>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -285,7 +285,7 @@ export default function SettingsPage({ user, subscription }: SettingsPageProps) 
                     <p className="text-gray-900">{user.phone || 'Not provided'}</p>
                   </div>
 
-                  {user.role === 'AGENT' && (
+                  {user.role === 'real_estate_agent' && (
                     <>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
