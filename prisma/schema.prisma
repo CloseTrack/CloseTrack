@@ -48,12 +48,12 @@ enum NotificationType {
 
 model User {
   id                String    @id @default(cuid())
-  clerkId           String    @unique
+  clerkId           String?   @unique
   email             String    @unique
-  firstName         String
-  lastName          String
+  firstName         String?
+  lastName          String?
   phone             String?
-  role              UserRole
+  role              String    @default("AGENT")
   companyName       String?
   licenseNumber     String?
   profileImageUrl   String?
@@ -61,8 +61,8 @@ model User {
   subscriptionId    String?
   subscriptionStatus String?
   stripeCustomerId  String?
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
+  createdAt         DateTime? @default(now())
+  updatedAt         DateTime? @default(now())
 
   // Relations
   transactions      Transaction[]
@@ -74,7 +74,7 @@ model User {
   notifications     Notification[]
   activities        Activity[]
 
-  @@map("users")
+  @@map("user_profiles")
 }
 
 model Transaction {
@@ -85,7 +85,7 @@ model Transaction {
   propertyCity      String
   propertyState     String            @default("NJ")
   propertyZip       String
-  status            TransactionStatus  @default(DRAFT)
+  status            String            @default("DRAFT")
   listingPrice      Decimal?          @db.Decimal(12, 2)
   salePrice         Decimal?          @db.Decimal(12, 2)
   commission        Decimal?          @db.Decimal(5, 2)
@@ -96,7 +96,7 @@ model Transaction {
   mortgageCommitmentDate DateTime?
   attorneyReviewDate DateTime?
   createdAt         DateTime          @default(now())
-  updatedAt         DateTime          @updatedAt
+  updatedAt         DateTime          @default(now())
 
   // Relations
   agentId           String
@@ -132,7 +132,7 @@ model Document {
   uploadedById      String
   title             String
   description       String?
-  type              DocumentType
+  type              String
   fileName          String
   fileUrl           String
   fileSize          Int
@@ -142,7 +142,7 @@ model Document {
   signedAt          DateTime?
   signedById        String?
   createdAt         DateTime    @default(now())
-  updatedAt         DateTime    @updatedAt
+  updatedAt         DateTime    @default(now())
 
   // Relations
   transaction       Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
@@ -212,7 +212,7 @@ model Checklist {
 model Notification {
   id                String           @id @default(cuid())
   userId            String
-  type              NotificationType
+  type              String
   title             String
   message           String
   isRead            Boolean          @default(false)

@@ -11,25 +11,58 @@ export async function getCurrentUser() {
     }
 
     // First try to find user in database
-    let user = await prisma.user.findUnique({
-      where: { clerkId: userId }
-    })
+    let user = null
+    try {
+      user = await prisma.user.findUnique({
+        where: { clerkId: userId }
+      })
+    } catch (dbError) {
+      console.error('Database error in getCurrentUser:', dbError)
+      // If database is down, return a minimal user object
+      const clerkUser = await currentUser()
+      if (clerkUser) {
+        return {
+          id: 'temp-' + userId,
+          clerkId: userId,
+          email: clerkUser.emailAddresses[0]?.emailAddress || '',
+          firstName: clerkUser.firstName || 'User',
+          lastName: clerkUser.lastName || 'Name',
+          role: 'AGENT',
+          isTemporary: true
+        }
+      }
+      return null
+    }
 
     // If user doesn't exist in database, create them
     if (!user) {
       const clerkUser = await currentUser()
       
       if (clerkUser) {
-        user = await prisma.user.create({
-          data: {
+        try {
+          user = await prisma.user.create({
+            data: {
+              clerkId: userId,
+              email: clerkUser.emailAddresses[0]?.emailAddress || '',
+              firstName: clerkUser.firstName || 'User',
+              lastName: clerkUser.lastName || 'Name',
+              role: 'AGENT', // Default role
+            },
+          })
+          console.log('Created user in database:', user.email)
+        } catch (createError) {
+          console.error('Error creating user:', createError)
+          // Return temporary user if database creation fails
+          return {
+            id: 'temp-' + userId,
             clerkId: userId,
             email: clerkUser.emailAddresses[0]?.emailAddress || '',
             firstName: clerkUser.firstName || 'User',
             lastName: clerkUser.lastName || 'Name',
-            role: 'AGENT', // Default role
-          },
-        })
-        console.log('Created user in database:', user.email)
+            role: 'AGENT',
+            isTemporary: true
+          }
+        }
       }
     }
 
@@ -51,6 +84,7 @@ export async function requireAuth() {
     const user = await getCurrentUser()
     
     if (!user) {
+      console.error('No user found after authentication')
       redirect('/sign-in')
     }
 
