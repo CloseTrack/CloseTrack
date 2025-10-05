@@ -31,10 +31,10 @@ interface TeamAnalyticsProps {
       id: string
       status: string
       salePrice?: Decimal | null
-      createdAt: Date
+      createdAt: Date | null
       agent: {
-        firstName: string | null | null
-        lastName: string | null | null
+        firstName: string | null
+        lastName: string | null
       }
     }>
     totalRevenue: number | Decimal

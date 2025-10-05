@@ -25,7 +25,7 @@ interface TeamOverviewProps {
       lastName: string | null
       email: string
       phone?: string | null
-      createdAt: Date
+      createdAt: Date | null
       _count: {
         transactions: number
       }
@@ -38,8 +38,8 @@ interface TeamOverviewProps {
       closingDate?: Date | null
       agent: {
         id: string
-        firstName: string | null | null
-        lastName: string | null | null
+        firstName: string | null
+        lastName: string | null
       }
     }>
     totalRevenue: number | Decimal
