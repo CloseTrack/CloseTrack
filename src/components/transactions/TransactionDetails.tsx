@@ -54,8 +54,8 @@ interface TransactionDetailsProps {
       isPrimary: boolean
       user: {
         id: string
-        firstName: string | null | null
-        lastName: string | null | null
+        firstName: string | null
+        lastName: string | null
         email: string
         phone?: string | null
         role: string
@@ -75,8 +75,8 @@ interface TransactionDetailsProps {
       signedAt?: Date | null
       createdAt: Date
       uploadedBy: {
-        firstName: string | null | null
-        lastName: string | null | null
+        firstName: string | null
+        lastName: string | null
       }
     }>
     deadlines: Array<{
@@ -89,8 +89,8 @@ interface TransactionDetailsProps {
       isCritical: boolean
       reminderSent: boolean
       completedBy?: {
-        firstName: string | null | null
-        lastName: string | null | null
+        firstName: string | null
+        lastName: string | null
       } | null
     }>
     checklists: Array<{
@@ -101,8 +101,8 @@ interface TransactionDetailsProps {
       completedAt?: Date | null
       order: number
       completedBy?: {
-        firstName: string | null | null
-        lastName: string | null | null
+        firstName: string | null
+        lastName: string | null
       } | null
     }>
     activities: Array<{
@@ -113,8 +113,8 @@ interface TransactionDetailsProps {
       metadata?: any
       createdAt: Date
       user: {
-        firstName: string | null | null
-        lastName: string | null | null
+        firstName: string | null
+        lastName: string | null
       }
     }>
   }

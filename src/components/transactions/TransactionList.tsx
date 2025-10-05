@@ -33,8 +33,8 @@ interface TransactionListProps {
     participants: Array<{
       role: string
       user: {
-        firstName: string | null | null
-        lastName: string | null | null
+        firstName: string | null
+        lastName: string | null
         role: string
       }
     }>
