@@ -64,6 +64,9 @@ export async function POST(request: NextRequest) {
       })
 
       console.log('User created:', { id, email: email_addresses[0].email_address })
+      
+      // Note: We'll redirect to role selection page after sign-up
+      // The user will be created with default role and can change it
     }
 
     if (eventType === 'user.updated') {
