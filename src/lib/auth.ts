@@ -3,6 +3,26 @@ import { redirect } from 'next/navigation'
 import { prisma } from './prisma'
 import { UserRole } from '@prisma/client'
 
+export type AuthUser = {
+  id: string
+  clerkId: string | null
+  email: string
+  firstName: string | null
+  lastName: string | null
+  phone: string | null
+  role: UserRole
+  companyName: string | null
+  licenseNumber: string | null
+  profileImageUrl: string | null
+  isActive: boolean
+  subscriptionId: string | null
+  subscriptionStatus: string | null
+  stripeCustomerId: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
+  isTemporary?: boolean
+}
+
 export async function getCurrentUser() {
   try {
     const { userId } = await auth()

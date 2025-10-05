@@ -1,8 +1,9 @@
 import { requireAuth } from '@/lib/auth'
+import type { AuthUser } from '@/lib/auth'
 
 export default async function SimpleDashboardPage() {
   try {
-    const user = await requireAuth()
+    const user = await requireAuth() as AuthUser
 
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
