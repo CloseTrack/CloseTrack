@@ -1,8 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { UserRole } from '@prisma/client'
 
 export async function GET(request: NextRequest) {
   try {
+    // Check if DATABASE_URL is available
+    if (!process.env.DATABASE_URL) {
+      return NextResponse.json({ 
+        success: false, 
+        error: 'DATABASE_URL not configured',
+        message: 'Database URL is not set in environment variables',
+        data: {
+          userCount: 0,
+          transactionCount: 0,
+          databaseUrl: 'Not Set'
+        }
+      })
+    }
+
     // Test basic connection
     await prisma.$connect()
     
@@ -55,6 +70,15 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    // Check if DATABASE_URL is available
+    if (!process.env.DATABASE_URL) {
+      return NextResponse.json({ 
+        success: false, 
+        error: 'DATABASE_URL not configured',
+        message: 'Database URL is not set in environment variables'
+      }, { status: 500 })
+    }
+
     // This endpoint can be used to initialize the database
     const { action } = await request.json()
     
@@ -69,7 +93,7 @@ export async function POST(request: NextRequest) {
           email: 'test@example.com',
           firstName: 'Test',
           lastName: 'User',
-          role: 'real_estate_agent'
+          role: UserRole.real_estate_agent
         }
       })
       
