@@ -1,6 +1,7 @@
 import { auth, currentUser } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 import { prisma } from './prisma'
+import { UserRole } from '@prisma/client'
 
 export async function getCurrentUser() {
   try {
@@ -27,7 +28,7 @@ export async function getCurrentUser() {
           email: clerkUser.emailAddresses[0]?.emailAddress || '',
           firstName: clerkUser.firstName || 'User',
           lastName: clerkUser.lastName || 'Name',
-          role: 'real_estate_agent',
+          role: UserRole.real_estate_agent,
           isTemporary: true
         }
       }
@@ -46,7 +47,7 @@ export async function getCurrentUser() {
               email: clerkUser.emailAddresses[0]?.emailAddress || '',
               firstName: clerkUser.firstName || 'User',
               lastName: clerkUser.lastName || 'Name',
-              role: 'real_estate_agent', // Default role
+              role: UserRole.real_estate_agent,
             },
           })
           console.log('Created user in database:', user.email)
@@ -59,7 +60,7 @@ export async function getCurrentUser() {
             email: clerkUser.emailAddresses[0]?.emailAddress || '',
             firstName: clerkUser.firstName || 'User',
             lastName: clerkUser.lastName || 'Name',
-            role: 'real_estate_agent',
+            role: UserRole.real_estate_agent,
             isTemporary: true
           }
         }
