@@ -62,19 +62,19 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
     ]
 
     // Add role-specific items
-    if (user.role === 'BROKER') {
+    if (user.role === 'real_estate_agent') {
       baseItems.push(
         {
           name: 'Team Management',
           href: '/dashboard/team',
           icon: Users,
-          roles: ['BROKER']
+          roles: ['real_estate_agent']
         },
         {
           name: 'Analytics',
           href: '/dashboard/analytics',
           icon: BarChart3,
-          roles: ['BROKER']
+          roles: ['real_estate_agent']
         }
       )
     }
@@ -111,9 +111,7 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
     switch (user.role) {
       case 'real_estate_agent':
         return Home
-      case 'BROKER':
-        return Building
-      case 'TITLE_COMPANY':
+      case 'title_insurance_agent':
         return Crown
       default:
         return Users

@@ -4,7 +4,7 @@ import TeamOverview from '@/components/broker/TeamOverview'
 import TeamAnalytics from '@/components/broker/TeamAnalytics'
 
 export default async function TeamPage() {
-  const broker = await requireRole('BROKER')
+  const broker = await requireRole('real_estate_agent')
 
   // Fetch team data
   const [

@@ -1,5 +1,6 @@
 import { requireAuth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { UserRole } from '@prisma/client'
 import TransactionList from '@/components/transactions/TransactionList'
 import TransactionFilters from '@/components/transactions/TransactionFilters'
 
@@ -9,21 +10,28 @@ export default async function TransactionsPage() {
   // Fetch transactions based on user role
   const transactions = await prisma.transaction.findMany({
     where: {
-      ...(user.role === 'real_estate_agent' && { agentId: user.id }),
-      ...(user.role === 'BROKER' && {
+      ...(user.role === UserRole.real_estate_agent && { agentId: user.id }),
+      ...(user.role === UserRole.real_estate_agent && {
         agent: {
-          // Broker can see all transactions from their agents
-          // This would need to be implemented based on your broker-agent relationship
+          // For now, agents can only see their own transactions
+          // Broker functionality would need additional implementation
         }
       }),
-      ...(user.role === 'TITLE_COMPANY' && {
+      ...(user.role === UserRole.title_insurance_agent && {
         participants: {
           some: {
             userId: user.id
           }
         }
       }),
-      ...(user.role === 'CLIENT' && {
+      ...(user.role === UserRole.buyer && {
+        participants: {
+          some: {
+            userId: user.id
+          }
+        }
+      }),
+      ...(user.role === UserRole.seller && {
         participants: {
           some: {
             userId: user.id
