@@ -24,6 +24,7 @@ const isPublicRoute = createRouteMatcher([
   '/api/user/check',
   '/api/debug-user-creation',
   '/api/test-schema-fix',
+  '/api/test-final-schema',
   '/api/debug-database',
   '/api/auth-test',
   '/debug',
