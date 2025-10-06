@@ -11,6 +11,7 @@ const isPublicRoute = createRouteMatcher([
   '/debug-complete',
   '/test-redirect',
   '/test-complete-flow',
+  '/test-role-api',
   '/redirect',
   '/api/webhooks(.*)',
   '/api/database',
