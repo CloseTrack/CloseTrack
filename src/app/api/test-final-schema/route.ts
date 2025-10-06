@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
       
       // Test finding the user
       const foundUser = await prisma.user.findUnique({
-        where: { clerkId: testUser.clerkId }
+        where: { clerkId: testUser.clerkId! }
       })
       
       // Clean up test user
