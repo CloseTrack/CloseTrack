@@ -10,6 +10,7 @@ const isPublicRoute = createRouteMatcher([
   '/test-connection',
   '/debug-complete',
   '/test-redirect',
+  '/test-complete-flow',
   '/redirect',
   '/api/webhooks(.*)',
   '/api/database',
