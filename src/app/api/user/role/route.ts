@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@clerk/nextjs/server'
+import { auth, currentUser } from '@clerk/nextjs/server'
 import { prisma } from '@/lib/prisma'
 import { UserRole } from '@prisma/client'
 
@@ -35,22 +35,50 @@ export async function POST(request: NextRequest) {
 
     // If user doesn't exist, create them
     if (!user) {
-      const clerkUser = await auth()
-      user = await prisma.user.create({
-        data: {
-          clerkId: userId,
-          email: 'user@example.com', // We'll get this from Clerk if needed
-          firstName: 'User',
-          lastName: 'Name',
-          role: role as UserRole
-        }
-      })
+      console.log('User not found in database, creating new user...')
+      const clerkUser = await currentUser()
+      
+      if (!clerkUser) {
+        return NextResponse.json({ 
+          error: 'Unable to get user data from Clerk',
+          message: 'Please try signing in again'
+        }, { status: 400 })
+      }
+
+      try {
+        user = await prisma.user.create({
+          data: {
+            clerkId: userId,
+            email: clerkUser.emailAddresses[0]?.emailAddress || 'user@example.com',
+            firstName: clerkUser.firstName || 'User',
+            lastName: clerkUser.lastName || 'Name',
+            role: role as UserRole
+          }
+        })
+        console.log('Created user in database:', user.email)
+      } catch (createError) {
+        console.error('Error creating user:', createError)
+        return NextResponse.json({ 
+          error: 'Failed to create user in database',
+          message: createError instanceof Error ? createError.message : 'Unknown error'
+        }, { status: 500 })
+      }
     } else {
+      console.log('User found in database, updating role...')
       // Update existing user's role
-      user = await prisma.user.update({
-        where: { clerkId: userId },
-        data: { role: role as UserRole }
-      })
+      try {
+        user = await prisma.user.update({
+          where: { clerkId: userId },
+          data: { role: role as UserRole }
+        })
+        console.log('Updated user role:', user.role)
+      } catch (updateError) {
+        console.error('Error updating user role:', updateError)
+        return NextResponse.json({ 
+          error: 'Failed to update user role',
+          message: updateError instanceof Error ? updateError.message : 'Unknown error'
+        }, { status: 500 })
+      }
     }
 
     return NextResponse.json({ 
