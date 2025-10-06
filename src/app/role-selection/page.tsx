@@ -2,12 +2,21 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { UserRole } from '@prisma/client'
+import { useAuth } from '@clerk/nextjs'
 
 export default function RoleSelectionPage() {
   const [selectedRole, setSelectedRole] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState('')
   const router = useRouter()
+  const { isSignedIn, isLoaded } = useAuth()
+
+  // Redirect if not signed in
+  useEffect(() => {
+    if (isLoaded && !isSignedIn) {
+      router.push('/sign-in')
+    }
+  }, [isLoaded, isSignedIn, router])
 
   const roles = [
     {
@@ -38,6 +47,7 @@ export default function RoleSelectionPage() {
 
   const handleRoleSelection = async (role: string) => {
     setIsLoading(true)
+    setError('')
     
     try {
       const response = await fetch('/api/user/role', {
@@ -48,19 +58,39 @@ export default function RoleSelectionPage() {
         body: JSON.stringify({ role }),
       })
       
+      const data = await response.json()
+      
       if (response.ok) {
+        console.log('Role updated successfully:', data)
         // Redirect to dashboard after successful role update
         router.push('/dashboard')
       } else {
-        console.error('Failed to update role')
-        alert('Failed to update role. Please try again.')
+        console.error('Failed to update role:', data)
+        setError(data.error || 'Failed to update role. Please try again.')
       }
     } catch (error) {
       console.error('Error updating role:', error)
-      alert('Error updating role. Please try again.')
+      setError('Network error. Please check your connection and try again.')
     } finally {
       setIsLoading(false)
     }
+  }
+
+  // Show loading while checking auth
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+          <p className="mt-2 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Don't render if not signed in (will redirect)
+  if (!isSignedIn) {
+    return null
   }
 
   return (
@@ -74,6 +104,13 @@ export default function RoleSelectionPage() {
             Please select your role to get started
           </p>
         </div>
+        
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
+            <p className="font-semibold">Error:</p>
+            <p>{error}</p>
+          </div>
+        )}
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {roles.map((role) => (
