@@ -106,22 +106,26 @@ export default async function DashboardPage() {
         </div>
 
         <DashboardOverview
-          activeTransactions={activeTransactions}
-          totalRevenue={Number(totalRevenue._sum.salePrice) || 0}
-          upcomingDeadlines={upcomingDeadlines}
-          recentActivities={recentActivities.map(activity => ({
-            id: activity.id,
-            type: activity.type,
-            description: activity.description,
-            createdAt: activity.createdAt,
-            user: {
-              firstName: activity.user.firstName,
-              lastName: activity.user.lastName
-            },
-            transaction: {
-              title: activity.transaction.title
-            }
-          }))}
+          data={{
+            activeTransactions,
+            totalRevenue: Number(totalRevenue._sum.salePrice) || 0,
+            upcomingDeadlines,
+            recentActivities: recentActivities.map(activity => ({
+              id: activity.id,
+              type: activity.type,
+              title: activity.transaction.title,
+              description: activity.description,
+              createdAt: activity.createdAt,
+              transaction: {
+                id: activity.transaction.title, // Using title as ID for now
+                title: activity.transaction.title
+              },
+              user: {
+                firstName: activity.user.firstName,
+                lastName: activity.user.lastName
+              }
+            }))
+          }}
           userRole={user.role}
         />
       </div>
