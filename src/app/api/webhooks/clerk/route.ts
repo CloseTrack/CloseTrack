@@ -100,7 +100,7 @@ export async function POST(request: NextRequest) {
         // Update user in database
         await prisma.user.update({
           where: { clerkId: id },
-          update: {
+          data: {
             email: email,
             firstName: first_name || 'User',
             lastName: last_name || 'Name',
