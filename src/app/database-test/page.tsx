@@ -19,20 +19,19 @@ export default function DatabaseTestPage() {
     }
   }
 
-  const testRoleUpdate = async () => {
+  const testUserCreation = async () => {
     setIsLoading(true)
     try {
-      const response = await fetch('/api/user/role', {
+      const response = await fetch('/api/user/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ role: 'real_estate_agent' }),
       })
       const data = await response.json()
       setTestResult(data)
     } catch (error) {
-      setTestResult({ error: 'Failed to test role update', details: error })
+      setTestResult({ error: 'Failed to test user creation', details: error })
     } finally {
       setIsLoading(false)
     }
@@ -56,13 +55,13 @@ export default function DatabaseTestPage() {
           </div>
 
           <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-xl font-semibold mb-4">Role Update Test</h2>
+            <h2 className="text-xl font-semibold mb-4">User Creation Test</h2>
             <button
-              onClick={testRoleUpdate}
+              onClick={testUserCreation}
               disabled={isLoading}
-              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 disabled:opacity-50"
+              className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 disabled:opacity-50"
             >
-              {isLoading ? 'Testing...' : 'Test Role Update'}
+              {isLoading ? 'Testing...' : 'Test User Creation'}
             </button>
           </div>
 

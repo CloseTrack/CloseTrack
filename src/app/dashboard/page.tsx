@@ -1,34 +1,129 @@
 import { requireAuth } from '@/lib/auth'
-import type { AuthUser } from '@/lib/auth'
+import { prisma } from '@/lib/prisma'
+import DashboardOverview from '@/components/dashboard/DashboardOverview'
+import { formatCurrency } from '@/lib/utils'
 
-export default async function SimpleDashboardPage() {
+export default async function DashboardPage() {
   try {
-    const user = await requireAuth() as AuthUser
+    const user = await requireAuth()
 
-    return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-        <p className="mt-2 text-gray-600">
-          Welcome, {user.firstName || 'User'} {user.lastName || 'Name'}! Your role is {user.role}.
-        </p>
-        {user.isTemporary && (
+    // Check if user is temporary (database connection issue)
+    if ((user as any).isTemporary) {
+      return (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+          <p className="mt-2 text-gray-600">
+            Welcome, {user.firstName || 'User'} {user.lastName || 'Name'}! Your role is {user.role}.
+          </p>
           <div className="mt-4 p-4 bg-yellow-100 border border-yellow-400 text-yellow-700 rounded-md">
             <p className="font-semibold">Temporary User Mode:</p>
             <p>This user object is temporary because the database could not be reached or the user was not found. Please ensure your DATABASE_URL is correct and the database is accessible.</p>
           </div>
-        )}
-        <div className="mt-6 p-4 bg-blue-50 rounded-md">
-          <h2 className="text-xl font-semibold text-blue-800">Authentication Successful!</h2>
-          <p className="text-blue-700">
-            You have successfully authenticated with Clerk and accessed a protected route.
-          </p>
-          <p className="text-blue-700 mt-2">
-            If you are seeing this, your Clerk setup is likely correct.
-          </p>
-          <p className="text-blue-700 mt-2">
-            If you were expecting to see the full dashboard, there might still be an issue with your database connection or user data synchronization.
+          <div className="mt-4 p-4 bg-blue-50 rounded-md">
+            <h2 className="text-xl font-semibold text-blue-800">Authentication Successful!</h2>
+            <p className="text-blue-700">
+              You have successfully authenticated with Clerk and accessed a protected route.
+            </p>
+            <p className="text-blue-700 mt-2">
+              If you are seeing this, your Clerk setup is likely correct.
+            </p>
+            <p className="text-blue-700 mt-2">
+              If you were expecting to see the full dashboard, there might still be an issue with your database connection or user data synchronization.
+            </p>
+          </div>
+        </div>
+      )
+    }
+
+    // Fetch dashboard data based on user role
+    const [
+      activeTransactions,
+      totalRevenue,
+      upcomingDeadlines,
+      recentActivities
+    ] = await Promise.all([
+      prisma.transaction.count({
+        where: {
+          agentId: user.id,
+          status: {
+            not: 'CLOSED'
+          }
+        }
+      }),
+      prisma.transaction.aggregate({
+        where: {
+          agentId: user.id,
+          status: 'CLOSED'
+        },
+        _sum: {
+          salePrice: true
+        }
+      }),
+      prisma.deadline.count({
+        where: {
+          transaction: {
+            agentId: user.id
+          },
+          isCompleted: false,
+          dueDate: {
+            gte: new Date()
+          }
+        }
+      }),
+      prisma.activity.findMany({
+        where: {
+          transaction: {
+            agentId: user.id
+          }
+        },
+        include: {
+          user: {
+            select: {
+              firstName: true,
+              lastName: true
+            }
+          },
+          transaction: {
+            select: {
+              title: true
+            }
+          }
+        },
+        orderBy: {
+          createdAt: 'desc'
+        },
+        take: 5
+      })
+    ])
+
+    return (
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+          <p className="text-gray-600 mt-2">
+            Welcome back, {user.firstName || 'User'} {user.lastName || 'Name'}!
           </p>
         </div>
+
+        <DashboardOverview
+          activeTransactions={activeTransactions}
+          totalRevenue={Number(totalRevenue._sum.salePrice) || 0}
+          upcomingDeadlines={upcomingDeadlines}
+          recentActivities={recentActivities.map(activity => ({
+            id: activity.id,
+            type: activity.type,
+            description: activity.description,
+            createdAt: activity.createdAt,
+            user: {
+              firstName: activity.user.firstName,
+              lastName: activity.user.lastName
+            },
+            transaction: {
+              title: activity.transaction.title
+            }
+          }))}
+          userRole={user.role}
+        />
       </div>
     )
   } catch (error) {
@@ -39,6 +134,12 @@ export default async function SimpleDashboardPage() {
         <p className="mt-2 text-red-600">
           There was an error loading the dashboard: {error instanceof Error ? error.message : 'Unknown error'}
         </p>
+        <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-md">
+          <p className="text-red-800">
+            This error suggests there might be an issue with the database connection or user authentication.
+            Please check the console for more details.
+          </p>
+        </div>
       </div>
     )
   }
