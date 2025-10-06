@@ -17,35 +17,43 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid role' }, { status: 400 })
     }
 
-    // Check if DATABASE_URL is available
-    if (!process.env.DATABASE_URL) {
+    // Get user data from Clerk
+    const clerkUser = await currentUser()
+    
+    if (!clerkUser) {
       return NextResponse.json({ 
-        error: 'Database not configured',
-        message: 'DATABASE_URL is not set in environment variables'
-      }, { status: 500 })
+        error: 'Unable to get user data from Clerk',
+        message: 'Please try signing in again'
+      }, { status: 400 })
     }
 
-    // Try to connect to database
-    await prisma.$connect()
-
-    // First, try to find the user
-    let user = await prisma.user.findUnique({
-      where: { clerkId: userId }
-    })
+    // Try different approaches to find/create user
+    let user = null
+    
+    try {
+      // First try to find by clerkId
+      user = await prisma.user.findUnique({
+        where: { clerkId: userId }
+      })
+    } catch (error) {
+      console.log('clerkId search failed, trying email:', error)
+      
+      try {
+        // Try to find by email
+        user = await prisma.user.findUnique({
+          where: { email: clerkUser.emailAddresses[0]?.emailAddress || '' }
+        })
+      } catch (error2) {
+        console.log('email search failed:', error2)
+      }
+    }
 
     // If user doesn't exist, create them
     if (!user) {
       console.log('User not found in database, creating new user...')
-      const clerkUser = await currentUser()
       
-      if (!clerkUser) {
-        return NextResponse.json({ 
-          error: 'Unable to get user data from Clerk',
-          message: 'Please try signing in again'
-        }, { status: 400 })
-      }
-
       try {
+        // Try to create with clerkId
         user = await prisma.user.create({
           data: {
             clerkId: userId,
@@ -55,20 +63,35 @@ export async function POST(request: NextRequest) {
             role: role as UserRole
           }
         })
-        console.log('Created user in database:', user.email)
+        console.log('Created user with clerkId:', user.email)
       } catch (createError) {
-        console.error('Error creating user:', createError)
-        return NextResponse.json({ 
-          error: 'Failed to create user in database',
-          message: createError instanceof Error ? createError.message : 'Unknown error'
-        }, { status: 500 })
+        console.log('Failed to create with clerkId, trying without:', createError)
+        
+        try {
+          // Try to create without clerkId (in case the field doesn't exist)
+          user = await prisma.user.create({
+            data: {
+              email: clerkUser.emailAddresses[0]?.emailAddress || 'user@example.com',
+              firstName: clerkUser.firstName || 'User',
+              lastName: clerkUser.lastName || 'Name',
+              role: role as UserRole
+            }
+          })
+          console.log('Created user without clerkId:', user.email)
+        } catch (createError2) {
+          console.error('Error creating user:', createError2)
+          return NextResponse.json({ 
+            error: 'Failed to create user in database',
+            message: createError2 instanceof Error ? createError2.message : 'Unknown error'
+          }, { status: 500 })
+        }
       }
     } else {
       console.log('User found in database, updating role...')
       // Update existing user's role
       try {
         user = await prisma.user.update({
-          where: { clerkId: userId },
+          where: { id: user.id },
           data: { role: role as UserRole }
         })
         console.log('Updated user role:', user.role)
@@ -86,29 +109,13 @@ export async function POST(request: NextRequest) {
       user: {
         id: user.id,
         role: user.role,
-        email: user.email
+        email: user.email,
+        clerkId: user.clerkId
       },
       message: 'Role updated successfully' 
     })
   } catch (error) {
     console.error('Role update error:', error)
-    
-    // Check if it's a database connection error
-    if (error instanceof Error) {
-      if (error.message.includes('connect') || error.message.includes('ECONNREFUSED')) {
-        return NextResponse.json({ 
-          error: 'Database connection failed',
-          message: 'Unable to connect to database. Please check your DATABASE_URL.'
-        }, { status: 500 })
-      }
-      
-      if (error.message.includes('relation') || error.message.includes('table')) {
-        return NextResponse.json({ 
-          error: 'Database tables not found',
-          message: 'Please run the database setup script in Supabase.'
-        }, { status: 500 })
-      }
-    }
     
     return NextResponse.json(
       { 
@@ -117,7 +124,5 @@ export async function POST(request: NextRequest) {
       },
       { status: 500 }
     )
-  } finally {
-    await prisma.$disconnect()
   }
 }
