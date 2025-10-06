@@ -7,6 +7,7 @@ const isPublicRoute = createRouteMatcher([
   '/role-selection',
   '/database-test',
   '/test-connection',
+  '/redirect',
   '/api/webhooks(.*)',
   '/api/database',
   '/api/test-database',

@@ -3,9 +3,18 @@
 import { SignUp } from '@clerk/nextjs'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
+import { useAuth } from '@clerk/nextjs'
 
 export default function SignUpPage() {
   const router = useRouter()
+  const { isSignedIn, isLoaded } = useAuth()
+
+  // Redirect to role selection if user is signed in
+  useEffect(() => {
+    if (isLoaded && isSignedIn) {
+      router.push('/role-selection')
+    }
+  }, [isLoaded, isSignedIn, router])
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
