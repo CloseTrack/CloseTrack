@@ -23,7 +23,7 @@ export type AuthUser = {
   isTemporary?: boolean
 }
 
-export async function getCurrentUser() {
+export async function getCurrentUser(): Promise<AuthUser | null> {
   try {
     const { userId } = await auth()
     
@@ -136,7 +136,7 @@ export async function requireAuth() {
   }
 }
 
-export async function requireRole(role: string) {
+export async function requireRole(role: UserRole): Promise<AuthUser> {
   try {
     const user = await requireAuth()
     
@@ -151,7 +151,7 @@ export async function requireRole(role: string) {
   }
 }
 
-export async function requireRoles(roles: string[]) {
+export async function requireRoles(roles: UserRole[]): Promise<AuthUser> {
   try {
     const user = await requireAuth()
     
