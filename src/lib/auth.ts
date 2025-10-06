@@ -42,7 +42,17 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
           email: clerkUser.emailAddresses[0]?.emailAddress || '',
           firstName: clerkUser.firstName || 'User',
           lastName: clerkUser.lastName || 'Name',
+          phone: null,
           role: UserRole.real_estate_agent,
+          companyName: null,
+          licenseNumber: null,
+          profileImageUrl: null,
+          isActive: true,
+          subscriptionId: null,
+          subscriptionStatus: null,
+          stripeCustomerId: null,
+          createdAt: null,
+          updatedAt: null,
           isTemporary: true
         }
       }
@@ -67,7 +77,17 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
           email: clerkUser.emailAddresses[0]?.emailAddress || '',
           firstName: clerkUser.firstName || 'User',
           lastName: clerkUser.lastName || 'Name',
+          phone: null,
           role: UserRole.real_estate_agent,
+          companyName: null,
+          licenseNumber: null,
+          profileImageUrl: null,
+          isActive: true,
+          subscriptionId: null,
+          subscriptionStatus: null,
+          stripeCustomerId: null,
+          createdAt: null,
+          updatedAt: null,
           isTemporary: true
         }
       }
@@ -114,7 +134,7 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
   }
 }
 
-export async function requireAuth() {
+export async function requireAuth(): Promise<AuthUser> {
   try {
     const { userId } = await auth()
     
