@@ -12,7 +12,7 @@ export default function SignUpPage() {
   // Redirect to role selection if user is signed in
   useEffect(() => {
     if (isLoaded && isSignedIn) {
-      router.push('/role-selection')
+      router.push('/post-signup')
     }
   }, [isLoaded, isSignedIn, router])
 
