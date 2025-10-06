@@ -1,15 +1,33 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
 import { useAuth } from '@clerk/nextjs'
+import { useRouter } from 'next/navigation'
 
 export default function RoleSelectionPage() {
   const [selectedRole, setSelectedRole] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
+  const [dbStatus, setDbStatus] = useState('checking')
   const router = useRouter()
-  const { isSignedIn, isLoaded } = useAuth()
+  const { isSignedIn, isLoaded, userId } = useAuth()
+
+  // Check database status
+  useEffect(() => {
+    const checkDatabase = async () => {
+      try {
+        const response = await fetch('/api/test-all-connections')
+        const data = await response.json()
+        setDbStatus(data.success ? 'working' : 'failed')
+      } catch (error) {
+        setDbStatus('failed')
+      }
+    }
+    
+    if (isLoaded && isSignedIn) {
+      checkDatabase()
+    }
+  }, [isLoaded, isSignedIn])
 
   // Redirect if not signed in
   useEffect(() => {
@@ -46,10 +64,12 @@ export default function RoleSelectionPage() {
   ]
 
   const handleRoleSelection = async (role: string) => {
+    setSelectedRole(role)
     setIsLoading(true)
     setError('')
-    
+
     try {
+      // Try to update role in database
       const response = await fetch('/api/user/role', {
         method: 'POST',
         headers: {
@@ -57,20 +77,36 @@ export default function RoleSelectionPage() {
         },
         body: JSON.stringify({ role }),
       })
-      
+
       const data = await response.json()
-      
+
       if (response.ok) {
         console.log('Role updated successfully:', data)
         // Redirect to dashboard after successful role update
         router.push('/dashboard')
       } else {
         console.error('Failed to update role:', data)
-        setError(data.error || 'Failed to update role. Please try again.')
+        // Even if database fails, continue with role selection
+        if (dbStatus === 'failed') {
+          console.log('Database is down, but continuing with role selection')
+          // Store role in localStorage as fallback
+          localStorage.setItem('userRole', role)
+          localStorage.setItem('userId', userId || '')
+          router.push('/dashboard')
+        } else {
+          setError(data.error || 'Failed to update role. Please try again.')
+        }
       }
     } catch (error) {
       console.error('Error updating role:', error)
-      setError('Network error. Please check your connection and try again.')
+      if (dbStatus === 'failed') {
+        // Database is down, use fallback
+        localStorage.setItem('userRole', role)
+        localStorage.setItem('userId', userId || '')
+        router.push('/dashboard')
+      } else {
+        setError('Network error. Please check your connection and try again.')
+      }
     } finally {
       setIsLoading(false)
     }
@@ -103,15 +139,35 @@ export default function RoleSelectionPage() {
           <p className="mt-2 text-lg text-gray-600">
             Please select your role to get started
           </p>
+          
+          {/* Database Status Indicator */}
+          <div className="mt-4">
+            {dbStatus === 'checking' && (
+              <div className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-yellow-100 text-yellow-800">
+                <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-yellow-600 mr-2"></div>
+                Checking database connection...
+              </div>
+            )}
+            {dbStatus === 'working' && (
+              <div className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-green-100 text-green-800">
+                ✅ Database connected
+              </div>
+            )}
+            {dbStatus === 'failed' && (
+              <div className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-orange-100 text-orange-800">
+                ⚠️ Database offline - using fallback mode
+              </div>
+            )}
+          </div>
         </div>
-        
+
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
             <p className="font-semibold">Error:</p>
             <p>{error}</p>
           </div>
         )}
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {roles.map((role) => (
             <button
@@ -128,14 +184,14 @@ export default function RoleSelectionPage() {
             </button>
           ))}
         </div>
-        
+
         {isLoading && (
           <div className="text-center">
             <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
             <p className="mt-2 text-gray-600">Setting up your account...</p>
           </div>
         )}
-        
+
         <div className="text-center">
           <p className="text-sm text-gray-500">
             You can change your role later in settings
