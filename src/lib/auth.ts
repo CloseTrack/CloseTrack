@@ -31,12 +31,31 @@ export async function getCurrentUser() {
       return null
     }
 
+    // Check if DATABASE_URL is available
+    if (!process.env.DATABASE_URL) {
+      console.warn('DATABASE_URL not available, returning temporary user')
+      const clerkUser = await currentUser()
+      if (clerkUser) {
+        return {
+          id: 'temp-' + userId,
+          clerkId: userId,
+          email: clerkUser.emailAddresses[0]?.emailAddress || '',
+          firstName: clerkUser.firstName || 'User',
+          lastName: clerkUser.lastName || 'Name',
+          role: UserRole.real_estate_agent,
+          isTemporary: true
+        }
+      }
+      return null
+    }
+
     // First try to find user in database
     let user = null
     try {
       user = await prisma.user.findUnique({
         where: { clerkId: userId }
       })
+      console.log('User found in database:', user ? 'Yes' : 'No')
     } catch (dbError) {
       console.error('Database error in getCurrentUser:', dbError)
       // If database is down, return a minimal user object
@@ -57,6 +76,7 @@ export async function getCurrentUser() {
 
     // If user doesn't exist in database, create them
     if (!user) {
+      console.log('User not found in database, creating new user...')
       const clerkUser = await currentUser()
       
       if (clerkUser) {
