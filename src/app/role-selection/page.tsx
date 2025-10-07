@@ -16,7 +16,7 @@ export default function RoleSelectionPage() {
   useEffect(() => {
     const checkDatabase = async () => {
       try {
-        const response = await fetch('/api/test-all-connections')
+        const response = await fetch('/api/simple-db-test')
         const data = await response.json()
         setDbStatus(data.success ? 'working' : 'failed')
       } catch (error) {
@@ -86,16 +86,10 @@ export default function RoleSelectionPage() {
         router.push('/dashboard')
       } else {
         console.error('Failed to update role:', data)
-        // Even if database fails, continue with role selection
-        if (dbStatus === 'failed') {
-          console.log('Database is down, but continuing with role selection')
-          // Store role in localStorage as fallback
-          localStorage.setItem('userRole', role)
-          localStorage.setItem('userId', userId || '')
-          router.push('/dashboard')
-        } else {
-          setError(data.error || 'Failed to update role. Please try again.')
-        }
+        // Show detailed error message
+        const errorMessage = data.message || data.error || 'Failed to update role. Please try again.'
+        const errorDetails = data.details ? JSON.stringify(data.details, null, 2) : ''
+        setError(`${errorMessage}${errorDetails ? '\n\nDetails:\n' + errorDetails : ''}`)
       }
     } catch (error) {
       console.error('Error updating role:', error)
