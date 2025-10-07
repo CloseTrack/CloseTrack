@@ -52,37 +52,55 @@ export async function POST(request: NextRequest) {
     if (!user) {
       console.log('User not found in database, creating new user...')
       
+      const userEmail = clerkUser.emailAddresses[0]?.emailAddress || `user-${userId}@closetrack.app`
+      const userFirstName = clerkUser.firstName || 'User'
+      const userLastName = clerkUser.lastName || 'Name'
+      
       try {
-        // Try to create with clerkId
+        // Try to create with Prisma first
         user = await prisma.user.create({
           data: {
             clerkId: userId,
-            email: clerkUser.emailAddresses[0]?.emailAddress || 'user@example.com',
-            firstName: clerkUser.firstName || 'User',
-            lastName: clerkUser.lastName || 'Name',
+            email: userEmail,
+            firstName: userFirstName,
+            lastName: userLastName,
             role: role as UserRole
           }
         })
-        console.log('Created user with clerkId:', user.email)
+        console.log('Created user with Prisma:', user.email)
       } catch (createError) {
-        console.log('Failed to create with clerkId, trying without:', createError)
+        console.log('Prisma create failed, trying raw SQL:', createError)
         
         try {
-          // Try to create without clerkId (in case the field doesn't exist)
-          user = await prisma.user.create({
-            data: {
-              email: clerkUser.emailAddresses[0]?.emailAddress || 'user@example.com',
-              firstName: clerkUser.firstName || 'User',
-              lastName: clerkUser.lastName || 'Name',
-              role: role as UserRole
-            }
-          })
-          console.log('Created user without clerkId:', user.email)
-        } catch (createError2) {
-          console.error('Error creating user:', createError2)
+          // Fallback to raw SQL
+          const result = await prisma.$queryRaw<any[]>`
+            INSERT INTO user_profiles (id, "clerkId", email, "firstName", "lastName", role)
+            VALUES (
+              gen_random_uuid()::text,
+              ${userId},
+              ${userEmail},
+              ${userFirstName},
+              ${userLastName},
+              ${role}::"UserRole"
+            )
+            RETURNING *
+          `
+          
+          if (result && result.length > 0) {
+            user = result[0]
+            console.log('Created user with raw SQL:', user.email)
+          } else {
+            throw new Error('No user returned from raw SQL insert')
+          }
+        } catch (rawSqlError) {
+          console.error('Error creating user with raw SQL:', rawSqlError)
           return NextResponse.json({ 
             error: 'Failed to create user in database',
-            message: createError2 instanceof Error ? createError2.message : 'Unknown error'
+            message: rawSqlError instanceof Error ? rawSqlError.message : 'Unknown error',
+            details: {
+              prismaError: createError instanceof Error ? createError.message : 'Unknown',
+              rawSqlError: rawSqlError instanceof Error ? rawSqlError.message : 'Unknown'
+            }
           }, { status: 500 })
         }
       }
