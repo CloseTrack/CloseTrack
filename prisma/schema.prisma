@@ -116,7 +116,6 @@ model TransactionParticipant {
   transactionId     String
   userId            String
   role              String    // "buyer", "seller", "buyer_agent", "seller_agent", "title_company"
-  isPrimary         Boolean   @default(false)
   createdAt         DateTime  @default(now())
 
   // Relations
@@ -158,9 +157,7 @@ model Activity {
   transactionId     String
   userId            String
   type              String    // "status_change", "document_upload", "deadline_met", "deadline_missed", "note"
-  title             String
   description       String?
-  metadata          Json?
   createdAt         DateTime  @default(now())
 
   // Relations
@@ -179,8 +176,6 @@ model Deadline {
   isCompleted       Boolean   @default(false)
   completedAt       DateTime?
   completedById     String?
-  isCritical        Boolean   @default(false)
-  reminderSent      Boolean   @default(false)
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
 
@@ -199,7 +194,6 @@ model Checklist {
   isCompleted       Boolean   @default(false)
   completedAt       DateTime?
   completedById     String?
-  order             Int
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
 

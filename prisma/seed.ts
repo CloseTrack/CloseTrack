@@ -1,4 +1,8 @@
 import { PrismaClient, UserRole } from '@prisma/client'
+import * as dotenv from 'dotenv'
+
+// Load environment variables from .env file
+dotenv.config()
 
 const prisma = new PrismaClient()
 
@@ -173,7 +177,6 @@ async function main() {
           description: 'Schedule and complete home inspection',
           dueDate: transaction.inspectionDate || new Date(),
           isCompleted: transaction.status === 'CLOSED',
-          isCritical: true
         }
       })
 
@@ -184,7 +187,6 @@ async function main() {
           description: 'Property appraisal appointment',
           dueDate: transaction.appraisalDate || new Date(),
           isCompleted: false,
-          isCritical: true
         }
       })
 
@@ -195,7 +197,6 @@ async function main() {
           description: 'Buyer final walkthrough before closing',
           dueDate: new Date(transaction.closingDate || new Date()),
           isCompleted: false,
-          isCritical: true
         }
       })
     }
@@ -206,7 +207,6 @@ async function main() {
         transactionId: transaction.id,
         userId: agentDemo.id,
         type: 'status_change',
-        title: `Transaction Status: ${transaction.status}`,
         description: `Transaction status updated to ${transaction.status}`
       }
     })
@@ -258,7 +258,6 @@ async function main() {
       dueDate: new Date('2024-02-10'),
       isCompleted: true,
       completedAt: new Date('2024-02-08'),
-      isCritical: true
     }
   })
 
@@ -269,7 +268,6 @@ async function main() {
       description: 'Schedule your final walkthrough before closing',
       dueDate: new Date('2024-03-18'),
       isCompleted: false,
-      isCritical: true
     }
   })
 
@@ -337,7 +335,6 @@ async function main() {
       description: 'Complete agreed-upon repairs from home inspection',
       dueDate: new Date('2024-03-15'),
       isCompleted: false,
-      isCritical: true
     }
   })
 
@@ -348,7 +345,6 @@ async function main() {
       description: 'Property must be vacated by this date',
       dueDate: new Date('2024-03-30'),
       isCompleted: false,
-      isCritical: true
     }
   })
 
