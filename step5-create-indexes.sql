@@ -1,0 +1,10 @@
+CREATE INDEX idx_user_profiles_clerk_id ON user_profiles("clerkId");
+CREATE INDEX idx_user_profiles_email ON user_profiles(email);
+CREATE INDEX idx_transactions_agent_id ON transactions("agentId");
+CREATE INDEX idx_transactions_status ON transactions(status);
+CREATE INDEX idx_documents_transaction_id ON documents("transactionId");
+CREATE INDEX idx_notifications_user_id ON notifications("userId");
+CREATE INDEX idx_notifications_is_read ON notifications("isRead");
+CREATE INDEX idx_activities_transaction_id ON activities("transactionId");
+CREATE INDEX idx_deadlines_transaction_id ON deadlines("transactionId");
+CREATE INDEX idx_deadlines_due_date ON deadlines("dueDate");

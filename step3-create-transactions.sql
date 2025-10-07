@@ -1,0 +1,22 @@
+CREATE TABLE transactions (
+    id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
+    title TEXT NOT NULL,
+    description TEXT,
+    "propertyAddress" TEXT NOT NULL,
+    "propertyCity" TEXT NOT NULL,
+    "propertyState" TEXT DEFAULT 'NJ',
+    "propertyZip" TEXT NOT NULL,
+    status TEXT DEFAULT 'DRAFT',
+    "listingPrice" DECIMAL(12,2),
+    "salePrice" DECIMAL(12,2),
+    commission DECIMAL(5,2),
+    "contractDate" TIMESTAMP WITH TIME ZONE,
+    "closingDate" TIMESTAMP WITH TIME ZONE,
+    "inspectionDate" TIMESTAMP WITH TIME ZONE,
+    "appraisalDate" TIMESTAMP WITH TIME ZONE,
+    "mortgageCommitmentDate" TIMESTAMP WITH TIME ZONE,
+    "attorneyReviewDate" TIMESTAMP WITH TIME ZONE,
+    "agentId" TEXT NOT NULL REFERENCES user_profiles(id) ON DELETE CASCADE,
+    "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    "updatedAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);

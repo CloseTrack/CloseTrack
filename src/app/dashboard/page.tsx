@@ -35,66 +35,76 @@ export default async function DashboardPage() {
       )
     }
 
-    // Fetch dashboard data based on user role
-    const [
-      activeTransactions,
-      totalRevenue,
-      upcomingDeadlines,
-      recentActivities
-    ] = await Promise.all([
-      prisma.transaction.count({
-        where: {
-          agentId: user.id,
-          status: {
-            not: 'CLOSED'
-          }
-        }
-      }),
-      prisma.transaction.aggregate({
-        where: {
-          agentId: user.id,
-          status: 'CLOSED'
-        },
-        _sum: {
-          salePrice: true
-        }
-      }),
-      prisma.deadline.count({
-        where: {
-          transaction: {
-            agentId: user.id
-          },
-          isCompleted: false,
-          dueDate: {
-            gte: new Date()
-          }
-        }
-      }),
-      prisma.activity.findMany({
-        where: {
-          transaction: {
-            agentId: user.id
-          }
-        },
-        include: {
-          user: {
-            select: {
-              firstName: true,
-              lastName: true
-            }
-          },
-          transaction: {
-            select: {
-              title: true
+    // Fetch dashboard data based on user role with safe defaults
+    let activeTransactions = 0
+    let totalRevenue = { _sum: { salePrice: null } }
+    let upcomingDeadlines = 0
+    let recentActivities: any[] = []
+
+    try {
+      [
+        activeTransactions,
+        totalRevenue,
+        upcomingDeadlines,
+        recentActivities
+      ] = await Promise.all([
+        prisma.transaction.count({
+          where: {
+            agentId: user.id,
+            status: {
+              not: 'CLOSED'
             }
           }
-        },
-        orderBy: {
-          createdAt: 'desc'
-        },
-        take: 5
-      })
-    ])
+        }).catch(() => 0),
+        prisma.transaction.aggregate({
+          where: {
+            agentId: user.id,
+            status: 'CLOSED'
+          },
+          _sum: {
+            salePrice: true
+          }
+        }).catch(() => ({ _sum: { salePrice: null } })),
+        prisma.deadline.count({
+          where: {
+            transaction: {
+              agentId: user.id
+            },
+            isCompleted: false,
+            dueDate: {
+              gte: new Date()
+            }
+          }
+        }).catch(() => 0),
+        prisma.activity.findMany({
+          where: {
+            transaction: {
+              agentId: user.id
+            }
+          },
+          include: {
+            user: {
+              select: {
+                firstName: true,
+                lastName: true
+              }
+            },
+            transaction: {
+              select: {
+                title: true
+              }
+            }
+          },
+          orderBy: {
+            createdAt: 'desc'
+          },
+          take: 5
+        }).catch(() => [])
+      ])
+    } catch (error) {
+      console.error('Error fetching dashboard data:', error)
+      // Continue with default values
+    }
 
     return (
       <div className="space-y-6">
