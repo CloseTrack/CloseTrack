@@ -27,39 +27,57 @@ export async function POST(request: NextRequest) {
       }, { status: 400 })
     }
 
-    // Try different approaches to find/create user
+    // Try different approaches to find user
     let user = null
+    const userEmail = clerkUser.emailAddresses[0]?.emailAddress
+    
+    if (!userEmail) {
+      return NextResponse.json({ 
+        error: 'No email found',
+        message: 'Unable to get email from Clerk account'
+      }, { status: 400 })
+    }
     
     try {
       // First try to find by clerkId
       user = await prisma.user.findUnique({
         where: { clerkId: userId }
       })
+      console.log('Found by clerkId:', !!user)
     } catch (error) {
       console.log('clerkId search failed, trying email:', error)
-      
+    }
+    
+    // If not found by clerkId, try email
+    if (!user) {
       try {
-        // Try to find by email
         user = await prisma.user.findUnique({
-          where: { email: clerkUser.emailAddresses[0]?.emailAddress || '' }
+          where: { email: userEmail }
         })
+        console.log('Found by email:', !!user)
       } catch (error2) {
         console.log('email search failed:', error2)
       }
     }
 
-    // If user doesn't exist, create them
+    // If user doesn't exist, create them; if exists, just update role
     if (!user) {
       console.log('User not found in database, creating new user...')
       
-      const userEmail = clerkUser.emailAddresses[0]?.emailAddress || `user-${userId}@closetrack.app`
       const userFirstName = clerkUser.firstName || 'User'
       const userLastName = clerkUser.lastName || 'Name'
       
       try {
-        // Try to create with Prisma first
-        user = await prisma.user.create({
-          data: {
+        // Use upsert to handle duplicate email gracefully
+        user = await prisma.user.upsert({
+          where: { email: userEmail },
+          update: {
+            clerkId: userId,
+            firstName: userFirstName,
+            lastName: userLastName,
+            role: role as UserRole
+          },
+          create: {
             clerkId: userId,
             email: userEmail,
             firstName: userFirstName,
@@ -67,38 +85,45 @@ export async function POST(request: NextRequest) {
             role: role as UserRole
           }
         })
-        console.log('Created user with Prisma:', user.email)
-      } catch (createError) {
-        console.log('Prisma create failed, trying raw SQL:', createError)
+        console.log('Upserted user with Prisma:', user.email)
+      } catch (upsertError) {
+        console.log('Prisma upsert failed, trying raw SQL:', upsertError)
         
         try {
-          // Fallback to raw SQL
+          // Fallback to raw SQL with ON CONFLICT
           const result = await prisma.$queryRaw<any[]>`
             INSERT INTO user_profiles (id, "clerkId", email, "firstName", "lastName", role)
             VALUES (
               gen_random_uuid()::text,
               ${userId},
               ${userEmail},
-              ${userFirstName},
-              ${userLastName},
+              ${clerkUser.firstName || 'User'},
+              ${clerkUser.lastName || 'Name'},
               ${role}::"UserRole"
             )
+            ON CONFLICT (email) 
+            DO UPDATE SET
+              "clerkId" = ${userId},
+              "firstName" = ${clerkUser.firstName || 'User'},
+              "lastName" = ${clerkUser.lastName || 'Name'},
+              role = ${role}::"UserRole",
+              "updatedAt" = NOW()
             RETURNING *
           `
           
           if (result && result.length > 0) {
             user = result[0]
-            console.log('Created user with raw SQL:', user.email)
+            console.log('Upserted user with raw SQL:', user.email)
           } else {
-            throw new Error('No user returned from raw SQL insert')
+            throw new Error('No user returned from raw SQL upsert')
           }
         } catch (rawSqlError) {
-          console.error('Error creating user with raw SQL:', rawSqlError)
+          console.error('Error upserting user with raw SQL:', rawSqlError)
           return NextResponse.json({ 
-            error: 'Failed to create user in database',
+            error: 'Failed to create or update user in database',
             message: rawSqlError instanceof Error ? rawSqlError.message : 'Unknown error',
             details: {
-              prismaError: createError instanceof Error ? createError.message : 'Unknown',
+              prismaError: upsertError instanceof Error ? upsertError.message : 'Unknown',
               rawSqlError: rawSqlError instanceof Error ? rawSqlError.message : 'Unknown'
             }
           }, { status: 500 })
