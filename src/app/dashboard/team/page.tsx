@@ -8,14 +8,17 @@ export default async function TeamPage() {
 
   // For now, only show the current user's own data
   // In a full implementation, this would show team members under a broker
+  
+  // Get transaction count for the user
+  const transactionCount = await prisma.transaction.count({
+    where: { agentId: user.id }
+  }).catch(() => 0)
+  
   const [
-    agents,
     teamTransactions,
     teamRevenue,
     complianceStats
   ] = await Promise.all([
-    // Only show current user
-    Promise.resolve([user]),
     // Only get current user's transactions
     prisma.transaction.findMany({
       where: {
@@ -52,6 +55,19 @@ export default async function TeamPage() {
       }
     }).catch(() => [])
   ])
+  
+  // Format agents array with _count property
+  const agents = [{
+    id: user.id,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    email: user.email,
+    phone: user.phone,
+    createdAt: user.createdAt,
+    _count: {
+      transactions: transactionCount
+    }
+  }]
 
   const teamData = {
     agents,
