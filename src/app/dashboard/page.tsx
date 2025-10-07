@@ -37,17 +37,12 @@ export default async function DashboardPage() {
 
     // Fetch dashboard data based on user role with safe defaults
     let activeTransactions = 0
-    let totalRevenue = { _sum: { salePrice: null } }
+    let totalRevenue: any = { _sum: { salePrice: null } }
     let upcomingDeadlines = 0
     let recentActivities: any[] = []
 
     try {
-      [
-        activeTransactions,
-        totalRevenue,
-        upcomingDeadlines,
-        recentActivities
-      ] = await Promise.all([
+      const results = await Promise.all([
         prisma.transaction.count({
           where: {
             agentId: user.id,
@@ -101,6 +96,11 @@ export default async function DashboardPage() {
           take: 5
         }).catch(() => [])
       ])
+      
+      activeTransactions = results[0] as number
+      totalRevenue = results[1]
+      upcomingDeadlines = results[2] as number
+      recentActivities = results[3] as any[]
     } catch (error) {
       console.error('Error fetching dashboard data:', error)
       // Continue with default values
