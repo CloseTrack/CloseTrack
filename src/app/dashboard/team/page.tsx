@@ -4,34 +4,22 @@ import TeamOverview from '@/components/broker/TeamOverview'
 import TeamAnalytics from '@/components/broker/TeamAnalytics'
 
 export default async function TeamPage() {
-  const broker = await requireRole('real_estate_agent')
+  const user = await requireRole('real_estate_agent')
 
-  // Fetch team data
+  // For now, only show the current user's own data
+  // In a full implementation, this would show team members under a broker
   const [
     agents,
     teamTransactions,
     teamRevenue,
     complianceStats
   ] = await Promise.all([
-    // Get all agents (this would need proper broker-agent relationship in real implementation)
-    prisma.user.findMany({
-      where: {
-        role: 'real_estate_agent',
-        isActive: true
-      },
-      include: {
-        _count: {
-          select: {
-            transactions: true
-          }
-        }
-      }
-    }),
+    // Only show current user
+    Promise.resolve([user]),
+    // Only get current user's transactions
     prisma.transaction.findMany({
       where: {
-        agent: {
-          role: 'real_estate_agent'
-        }
+        agentId: user.id
       },
       include: {
         agent: {
@@ -42,31 +30,27 @@ export default async function TeamPage() {
           }
         }
       }
-    }),
+    }).catch(() => []),
     prisma.transaction.aggregate({
       where: {
-        agent: {
-          role: 'real_estate_agent'
-        },
+        agentId: user.id,
         status: 'CLOSED'
       },
       _sum: {
         salePrice: true
       }
-    }),
+    }).catch(() => ({ _sum: { salePrice: null } })),
     prisma.deadline.groupBy({
       by: ['isCompleted'],
       where: {
         transaction: {
-          agent: {
-            role: 'real_estate_agent'
-          }
+          agentId: user.id
         }
       },
       _count: {
         isCompleted: true
       }
-    })
+    }).catch(() => [])
   ])
 
   const teamData = {

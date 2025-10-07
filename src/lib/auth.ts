@@ -65,7 +65,27 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
       user = await prisma.user.findUnique({
         where: { clerkId: userId }
       })
-      console.log('User found in database:', user ? 'Yes' : 'No')
+      console.log('User found by clerkId:', user ? 'Yes' : 'No')
+      
+      // If not found by clerkId, try by email
+      if (!user) {
+        const clerkUser = await currentUser()
+        if (clerkUser?.emailAddresses[0]?.emailAddress) {
+          user = await prisma.user.findUnique({
+            where: { email: clerkUser.emailAddresses[0].emailAddress }
+          })
+          console.log('User found by email:', user ? 'Yes' : 'No')
+          
+          // If found by email but not clerkId, update the clerkId
+          if (user && !user.clerkId) {
+            user = await prisma.user.update({
+              where: { id: user.id },
+              data: { clerkId: userId }
+            })
+            console.log('Updated user with clerkId')
+          }
+        }
+      }
     } catch (dbError) {
       console.error('Database error in getCurrentUser:', dbError)
       // If database is down, return a minimal user object
