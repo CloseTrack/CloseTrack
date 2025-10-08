@@ -1,25 +1,9 @@
-import { requireAuth } from '@/lib/auth'
-import DashboardSidebar from '@/components/dashboard/DashboardSidebar'
-import DashboardHeader from '@/components/dashboard/DashboardHeader'
-
-export default async function DashboardLayout({
+export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const user = await requireAuth()
-
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <DashboardSidebar user={user} />
-      <div className="lg:pl-64">
-        <DashboardHeader user={user} />
-        <main className="py-6">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            {children}
-          </div>
-        </main>
-      </div>
-    </div>
-  )
+  // The main DashboardLayout wrapper is already applied in the root layout
+  // This just passes through the children
+  return <>{children}</>
 }
