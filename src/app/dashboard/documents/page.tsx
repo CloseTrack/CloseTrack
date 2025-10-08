@@ -16,7 +16,7 @@ import {
   Image,
   File,
   FileSpreadsheet,
-  FilePdf
+  ArrowLeft
 } from 'lucide-react'
 
 interface Document {
@@ -72,7 +72,7 @@ export default function DocumentsPage() {
 
   const getFileIcon = (type: string) => {
     switch (type) {
-      case 'pdf': return FilePdf
+      case 'pdf': return FileText
       case 'image': return Image
       case 'spreadsheet': return FileSpreadsheet
       case 'document': return FileText

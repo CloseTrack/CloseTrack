@@ -16,7 +16,6 @@ import {
   Image,
   File,
   FileSpreadsheet,
-  FilePdf,
   ArrowLeft
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
@@ -65,7 +64,7 @@ export default function NewDocumentPage() {
   const getFileIcon = (fileName: string) => {
     const extension = fileName.split('.').pop()?.toLowerCase()
     switch (extension) {
-      case 'pdf': return FilePdf
+      case 'pdf': return FileText
       case 'jpg':
       case 'jpeg':
       case 'png':
