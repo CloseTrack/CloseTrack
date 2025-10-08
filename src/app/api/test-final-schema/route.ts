@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
           email: `test-${Date.now()}@example.com`,
           firstName: 'Test',
           lastName: 'User',
-          role: UserRole.real_estate_agent
+          role: UserRole.agent
         }
       })
       

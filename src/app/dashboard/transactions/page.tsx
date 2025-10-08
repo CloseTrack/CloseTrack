@@ -9,34 +9,16 @@ export default async function TransactionsPage() {
   // Fetch transactions based on user role
   const transactions = await prisma.transaction.findMany({
     where: {
-      ...(user.role === UserRole.real_estate_agent && { agentId: user.id }),
-      ...(user.role === UserRole.real_estate_agent && {
-        agent: {
-          // For now, agents can only see their own transactions
-          // Broker functionality would need additional implementation
-        }
-      }),
-      ...(user.role === UserRole.title_insurance_agent && {
-        participants: {
-          some: {
-            userId: user.id
+      OR: [
+        { agentId: user.id },
+        {
+          participants: {
+            some: {
+              userId: user.id
+            }
           }
         }
-      }),
-      ...(user.role === UserRole.buyer && {
-        participants: {
-          some: {
-            userId: user.id
-          }
-        }
-      }),
-      ...(user.role === UserRole.seller && {
-        participants: {
-          some: {
-            userId: user.id
-          }
-        }
-      })
+      ]
     },
     include: {
       agent: {

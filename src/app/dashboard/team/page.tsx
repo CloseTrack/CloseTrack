@@ -4,7 +4,7 @@ import TeamOverview from '@/components/broker/TeamOverview'
 import TeamAnalytics from '@/components/broker/TeamAnalytics'
 
 export default async function TeamPage() {
-  const user = await requireRole('real_estate_agent')
+  const user = await requireRole('agent')
 
   // For now, only show the current user's own data
   // In a full implementation, this would show team members under a broker

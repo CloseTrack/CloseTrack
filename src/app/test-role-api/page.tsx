@@ -14,7 +14,7 @@ export default function TestRoleAPI() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ role: 'real_estate_agent' }),
+        body: JSON.stringify({ role: 'agent' }),
       })
 
       const data = await response.json()

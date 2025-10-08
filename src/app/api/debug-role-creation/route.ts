@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
     try {
       await prisma.$queryRaw`
         INSERT INTO user_profiles (id, email, role)
-        VALUES (gen_random_uuid()::text, 'test@example.com', 'real_estate_agent'::public."UserRole")
+        VALUES (gen_random_uuid()::text, 'test@example.com', 'agent'::public."UserRole")
         ON CONFLICT (email) DO NOTHING
       `
     } catch (error) {

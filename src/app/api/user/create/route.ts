@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
         email: clerkUser.emailAddresses[0]?.emailAddress || 'user@example.com',
         firstName: clerkUser.firstName || 'User',
         lastName: clerkUser.lastName || 'Name',
-        role: UserRole.real_estate_agent
+        role: UserRole.agent
       }
     })
 

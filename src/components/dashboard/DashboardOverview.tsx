@@ -214,7 +214,7 @@ export default function DashboardOverview({ data, userRole }: DashboardOverviewP
       </div>
 
       {/* Role-specific content */}
-      {userRole === 'real_estate_agent' && (
+      {userRole === 'agent' && (
         <div className="card">
           <h3 className="text-lg font-semibold text-gray-900 mb-6">Team Overview</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

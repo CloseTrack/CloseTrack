@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
     const userEmail = clerkUser.emailAddresses[0]?.emailAddress || `user-${userId}@closetrack.app`
     const userFirstName = clerkUser.firstName || 'User'
     const userLastName = clerkUser.lastName || 'Name'
-    const testRole = 'real_estate_agent'
+    const testRole = 'agent'
 
     // Test 1: Try raw SQL with explicit cast
     let test1Result = null

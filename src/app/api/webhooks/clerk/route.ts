@@ -76,7 +76,7 @@ export async function POST(request: NextRequest) {
             email: email,
             firstName: first_name || 'User',
             lastName: last_name || 'Name',
-            role: UserRole.real_estate_agent, // Use enum
+            role: UserRole.agent, // Use enum
           },
         })
 

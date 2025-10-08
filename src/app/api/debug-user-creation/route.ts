@@ -102,7 +102,7 @@ export async function GET(request: NextRequest) {
           email: `test-${Date.now()}@example.com`,
           firstName: 'Test',
           lastName: 'User',
-          role: 'real_estate_agent'
+          role: 'agent'
         }
       })
       debugInfo.testUserCreation = { success: true, user: testUser }

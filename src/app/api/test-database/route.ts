@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
         email: 'test@example.com',
         firstName: 'Test',
         lastName: 'User',
-        role: 'real_estate_agent'
+        role: 'agent'
       }
     })
     

@@ -39,52 +39,52 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
         name: 'Dashboard',
         href: '/dashboard',
         icon: LayoutDashboard,
-        roles: ['real_estate_agent', 'buyer', 'seller', 'title_insurance_agent']
+        roles: ['agent', 'buyer', 'seller', 'title_company']
       },
       {
         name: 'Transactions',
         href: '/dashboard/transactions',
         icon: FileText,
-        roles: ['real_estate_agent', 'buyer', 'seller', 'title_insurance_agent']
+        roles: ['agent', 'buyer', 'seller', 'title_company']
       },
       {
         name: 'Calendar',
         href: '/dashboard/calendar',
         icon: Calendar,
-        roles: ['real_estate_agent', 'buyer', 'seller']
+        roles: ['agent', 'buyer', 'seller']
       },
       {
         name: 'Documents',
         href: '/dashboard/documents',
         icon: FileText,
-        roles: ['real_estate_agent', 'buyer', 'seller', 'title_insurance_agent']
+        roles: ['agent', 'buyer', 'seller', 'title_company']
       }
     ]
 
     // Add role-specific items
-    if (user.role === 'real_estate_agent') {
+    if (user.role === 'agent') {
       baseItems.push(
         {
           name: 'Team Management',
           href: '/dashboard/team',
           icon: Users,
-          roles: ['real_estate_agent']
+          roles: ['agent']
         },
         {
           name: 'Analytics',
           href: '/dashboard/analytics',
           icon: BarChart3,
-          roles: ['real_estate_agent']
+          roles: ['agent']
         }
       )
     }
 
-    if (user.role === 'real_estate_agent' || user.role === 'buyer') {
+    if (user.role === 'agent' || user.role === 'buyer') {
       baseItems.push({
         name: 'Clients',
         href: '/dashboard/clients',
         icon: Users,
-        roles: ['real_estate_agent', 'buyer']
+        roles: ['agent', 'buyer']
       })
     }
 
@@ -92,14 +92,14 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
       name: 'Notifications',
       href: '/dashboard/notifications',
       icon: Bell,
-      roles: ['real_estate_agent', 'buyer', 'seller', 'title_insurance_agent']
+      roles: ['agent', 'buyer', 'seller', 'title_company']
     })
 
     baseItems.push({
       name: 'Settings',
       href: '/dashboard/settings',
       icon: Settings,
-      roles: ['real_estate_agent', 'buyer', 'seller', 'title_insurance_agent']
+      roles: ['agent', 'buyer', 'seller', 'title_company']
     })
 
     return baseItems.filter(item => item.roles.includes(user.role))
@@ -109,9 +109,9 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
 
   const getRoleIcon = () => {
     switch (user.role) {
-      case 'real_estate_agent':
+      case 'agent':
         return Home
-      case 'title_insurance_agent':
+      case 'title_company':
         return Crown
       default:
         return Users
