@@ -43,7 +43,6 @@ interface ClientPortalProps {
     participants: Array<{
       id: string
       role: string
-      isPrimary: boolean
       user: {
         firstName: string | null
         lastName: string | null

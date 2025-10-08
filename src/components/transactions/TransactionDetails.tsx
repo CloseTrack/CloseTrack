@@ -51,7 +51,6 @@ interface TransactionDetailsProps {
     participants: Array<{
       id: string
       role: string
-      isPrimary: boolean
       user: {
         id: string
         firstName: string | null
@@ -97,7 +96,6 @@ interface TransactionDetailsProps {
       description?: string | null
       isCompleted: boolean
       completedAt?: Date | null
-      order: number
       completedBy?: {
         firstName: string | null
         lastName: string | null
@@ -106,9 +104,7 @@ interface TransactionDetailsProps {
     activities: Array<{
       id: string
       type: string
-      title: string
       description?: string | null
-      metadata?: any
       createdAt: Date
       user: {
         firstName: string | null
