@@ -390,7 +390,7 @@ export default function ClientPortal({ transactions, user }: ClientPortalProps) 
                             <ActivityIcon className="w-4 h-4 text-blue-600" />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-gray-900">{activity.title}</p>
+                            <p className="text-sm font-medium text-gray-900">{activity.type}</p>
                             {activity.description && (
                               <p className="text-sm text-gray-600">{activity.description}</p>
                             )}

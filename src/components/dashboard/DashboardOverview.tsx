@@ -168,7 +168,7 @@ export default function DashboardOverview({ data, userRole }: DashboardOverviewP
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-gray-900">
-                        {activity.title}
+                        {activity.type}
                       </p>
                       <p className="text-sm text-gray-600 truncate">
                         {activity.description || activity.transaction.title}
