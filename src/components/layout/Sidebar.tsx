@@ -149,7 +149,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
             </div>
             <div>
               <h1 className="font-display font-bold text-xl text-gray-900">CloseTrack</h1>
-              <p className="text-xs text-gray-500 -mt-1">Close deals faster</p>
+              <p className="text-xs text-gray-500 -mt-1">Close Deals Faster</p>
             </div>
           </div>
           <button

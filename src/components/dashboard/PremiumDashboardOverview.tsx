@@ -62,6 +62,7 @@ export default function PremiumDashboardOverview({ data, user }: PremiumDashboar
       color: 'text-blue-600',
       bgColor: 'bg-blue-50',
       gradient: 'from-blue-500 to-blue-600',
+      href: '/dashboard/transactions',
     },
     {
       name: 'Total Revenue',
@@ -72,6 +73,7 @@ export default function PremiumDashboardOverview({ data, user }: PremiumDashboar
       color: 'text-emerald-600',
       bgColor: 'bg-emerald-50',
       gradient: 'from-emerald-500 to-emerald-600',
+      href: '/dashboard/analytics',
     },
     {
       name: 'Upcoming Deadlines',
@@ -82,6 +84,7 @@ export default function PremiumDashboardOverview({ data, user }: PremiumDashboar
       color: 'text-orange-600',
       bgColor: 'bg-orange-50',
       gradient: 'from-orange-500 to-orange-600',
+      href: '/dashboard/calendar',
     },
     {
       name: 'This Month',
@@ -92,6 +95,7 @@ export default function PremiumDashboardOverview({ data, user }: PremiumDashboar
       color: 'text-purple-600',
       bgColor: 'bg-purple-50',
       gradient: 'from-purple-500 to-purple-600',
+      href: '/dashboard/analytics',
     },
   ]
 
@@ -177,38 +181,39 @@ export default function PremiumDashboardOverview({ data, user }: PremiumDashboar
         {stats.map((stat, index) => {
           const Icon = stat.icon
           return (
-            <motion.div
-              key={stat.name}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              className="group relative overflow-hidden rounded-2xl bg-white p-4 sm:p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 min-w-0"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-white/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <div className="relative">
-                <div className="flex items-center justify-between mb-3">
-                  <div className={`p-2 sm:p-3 rounded-xl ${stat.bgColor} flex-shrink-0`}>
-                    <Icon className={`h-5 w-5 sm:h-6 sm:w-6 ${stat.color}`} />
+            <Link key={stat.name} href={stat.href} className="block">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className="group relative overflow-hidden rounded-2xl bg-white p-4 sm:p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 min-w-0 cursor-pointer"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-white/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="relative">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className={`p-2 sm:p-3 rounded-xl ${stat.bgColor} flex-shrink-0`}>
+                      <Icon className={`h-5 w-5 sm:h-6 sm:w-6 ${stat.color}`} />
+                    </div>
+                    <div className={`flex items-center space-x-1 text-xs sm:text-sm font-medium ${
+                      stat.changeType === 'positive' ? 'text-emerald-600' : 'text-red-600'
+                    }`}>
+                      {stat.changeType === 'positive' ? (
+                        <ArrowUpRight className="h-3 w-3 sm:h-4 sm:w-4" />
+                      ) : (
+                        <ArrowDownRight className="h-3 w-3 sm:h-4 sm:w-4" />
+                      )}
+                      <span className="truncate">{stat.change}</span>
+                    </div>
                   </div>
-                  <div className={`flex items-center space-x-1 text-xs sm:text-sm font-medium ${
-                    stat.changeType === 'positive' ? 'text-emerald-600' : 'text-red-600'
-                  }`}>
-                    {stat.changeType === 'positive' ? (
-                      <ArrowUpRight className="h-3 w-3 sm:h-4 sm:w-4" />
-                    ) : (
-                      <ArrowDownRight className="h-3 w-3 sm:h-4 sm:w-4" />
-                    )}
-                    <span className="truncate">{stat.change}</span>
+                  <div className="min-w-0">
+                    <p className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 truncate" title={String(stat.value)}>
+                      {stat.value}
+                    </p>
+                    <p className="text-xs sm:text-sm text-gray-600 truncate">{stat.name}</p>
                   </div>
                 </div>
-                <div className="min-w-0">
-                  <p className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 truncate" title={String(stat.value)}>
-                    {stat.value}
-                  </p>
-                  <p className="text-xs sm:text-sm text-gray-600 truncate">{stat.name}</p>
-                </div>
-              </div>
-            </motion.div>
+              </motion.div>
+            </Link>
           )
         })}
       </div>
