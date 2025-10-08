@@ -69,6 +69,18 @@ const AccessibleButton = forwardRef<HTMLButtonElement, AccessibleButtonProps>(
 
     const isDisabled = disabled || loading
 
+    // Filter out props that conflict with Framer Motion
+    const { 
+      onDrag, 
+      onDragStart, 
+      onDragEnd, 
+      onAnimationStart, 
+      onAnimationEnd, 
+      onAnimationIteration,
+      onTransitionEnd,
+      ...motionProps 
+    } = props
+
     return (
       <motion.button
         ref={ref}
@@ -84,7 +96,7 @@ const AccessibleButton = forwardRef<HTMLButtonElement, AccessibleButtonProps>(
         aria-pressed={ariaPressed}
         aria-current={ariaCurrent}
         aria-busy={loading}
-        {...props}
+        {...motionProps}
       >
         {loading && (
           <motion.div

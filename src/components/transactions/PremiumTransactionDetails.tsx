@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { 
   ArrowLeft,
   Edit,
@@ -201,12 +201,68 @@ export default function PremiumTransactionDetails({ transaction, user }: Premium
   const [activeTab, setActiveTab] = useState('overview')
   const [showShareModal, setShowShareModal] = useState(false)
 
+  function getStatusConfig(status: string) {
+    const statusConfigs = {
+      DRAFT: { 
+        label: 'Draft', 
+        color: 'bg-gray-100 text-gray-800', 
+        bgColor: 'bg-gray-50',
+        icon: Edit 
+      },
+      OFFER_SUBMITTED: { 
+        label: 'Offer Submitted', 
+        color: 'bg-blue-100 text-blue-800', 
+        bgColor: 'bg-blue-50',
+        icon: Send 
+      },
+      UNDER_CONTRACT: { 
+        label: 'Under Contract', 
+        color: 'bg-yellow-100 text-yellow-800', 
+        bgColor: 'bg-yellow-50',
+        icon: FileText 
+      },
+      INSPECTION: { 
+        label: 'Inspection', 
+        color: 'bg-orange-100 text-orange-800', 
+        bgColor: 'bg-orange-50',
+        icon: Building2 
+      },
+      APPRAISAL: { 
+        label: 'Appraisal', 
+        color: 'bg-purple-100 text-purple-800', 
+        bgColor: 'bg-purple-50',
+        icon: TrendingUp 
+      },
+      MORTGAGE_COMMITMENT: { 
+        label: 'Mortgage Commitment', 
+        color: 'bg-indigo-100 text-indigo-800', 
+        bgColor: 'bg-indigo-50',
+        icon: CheckCircle 
+      },
+      ATTORNEY_REVIEW: { 
+        label: 'Attorney Review', 
+        color: 'bg-pink-100 text-pink-800', 
+        bgColor: 'bg-pink-50',
+        icon: AlertCircle 
+      },
+      CLOSING_SCHEDULED: { 
+        label: 'Closing Scheduled', 
+        color: 'bg-green-100 text-green-800', 
+        bgColor: 'bg-green-50',
+        icon: Calendar 
+      },
+      CLOSED: { 
+        label: 'Closed', 
+        color: 'bg-emerald-100 text-emerald-800', 
+        bgColor: 'bg-emerald-50',
+        icon: CheckCircle 
+      }
+    }
+    return statusConfigs[status as keyof typeof statusConfigs] || statusConfigs.DRAFT
+  }
+
   const statusConfig = getStatusConfig(transaction.status)
   const StatusIcon = statusConfig.icon
-
-  function getStatusConfig(status: string) {
-    return statusConfig[status as keyof typeof statusConfig] || statusConfig.DRAFT
-  }
 
   const getProgressPercentage = () => {
     const statusOrder = [
