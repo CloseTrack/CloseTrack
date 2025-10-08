@@ -137,6 +137,9 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         className={`fixed inset-y-0 left-0 z-50 w-72 bg-white border-r border-gray-200 flex flex-col lg:translate-x-0 ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
+        role="navigation"
+        aria-label="Main navigation"
+        id="main-navigation"
       >
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-100">

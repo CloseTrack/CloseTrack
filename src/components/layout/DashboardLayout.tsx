@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Header from './Header'
 import Sidebar from './Sidebar'
 import { ToastContainer, useToast } from '@/components/ui/Toast'
+import { MainContentSkipLink, NavigationSkipLink } from '@/components/ui/SkipLink'
 import { createContext, useContext } from 'react'
 
 interface DashboardLayoutProps {
@@ -60,6 +61,10 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   return (
     <ToastContext.Provider value={toast}>
       <div className="min-h-screen bg-gray-50">
+        {/* Skip Links */}
+        <MainContentSkipLink />
+        <NavigationSkipLink />
+        
         {/* Header */}
         <Header 
           onToggleSidebar={toggleSidebar} 
@@ -74,9 +79,15 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           />
 
           {/* Main Content */}
-          <main className={`flex-1 transition-all duration-300 ${
-            isMobile ? 'ml-0' : sidebarOpen ? 'ml-72' : 'ml-0'
-          }`}>
+          <main 
+            id="main-content"
+            className={`flex-1 transition-all duration-300 ${
+              isMobile ? 'ml-0' : sidebarOpen ? 'ml-72' : 'ml-0'
+            }`}
+            role="main"
+            aria-label="Main content"
+            tabIndex={-1}
+          >
             <div className="p-4 sm:p-6 lg:p-8">
               <AnimatePresence mode="wait">
                 <motion.div
