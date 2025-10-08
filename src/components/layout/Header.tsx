@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useUser } from '@clerk/nextjs'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { 
   Bell, 
   Search, 
@@ -62,7 +63,7 @@ export default function Header({ onToggleSidebar, sidebarOpen }: HeaderProps) {
             </button>
 
             {/* Logo */}
-            <div className="flex items-center space-x-3">
+            <Link href="/dashboard" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
               <div className="w-8 h-8 bg-gradient-primary rounded-xl flex items-center justify-center">
                 <Home className="h-5 w-5 text-white" />
               </div>
@@ -70,7 +71,7 @@ export default function Header({ onToggleSidebar, sidebarOpen }: HeaderProps) {
                 <h1 className="font-display font-bold text-xl text-gray-900">CloseTrack</h1>
                 <p className="text-xs text-gray-500 -mt-1">Close Deals Faster</p>
               </div>
-            </div>
+            </Link>
           </div>
 
           {/* Center Section - Search */}

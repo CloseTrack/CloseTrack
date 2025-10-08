@@ -27,6 +27,8 @@ import {
 interface SidebarProps {
   isOpen: boolean
   onClose: () => void
+  onMouseEnter?: () => void
+  onMouseLeave?: () => void
 }
 
 const navigation = [
@@ -104,7 +106,7 @@ const secondaryNavigation = [
   },
 ]
 
-export default function Sidebar({ isOpen, onClose }: SidebarProps) {
+export default function Sidebar({ isOpen, onClose, onMouseEnter, onMouseLeave }: SidebarProps) {
   const pathname = usePathname()
   const [expandedItems, setExpandedItems] = useState<string[]>([])
 
@@ -140,10 +142,12 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         role="navigation"
         aria-label="Main navigation"
         id="main-navigation"
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
       >
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-100">
-          <div className="flex items-center space-x-3">
+          <Link href="/dashboard" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
             <div className="w-8 h-8 bg-gradient-primary rounded-xl flex items-center justify-center">
               <Home className="h-5 w-5 text-white" />
             </div>
@@ -151,7 +155,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
               <h1 className="font-display font-bold text-xl text-gray-900">CloseTrack</h1>
               <p className="text-xs text-gray-500 -mt-1">Close Deals Faster</p>
             </div>
-          </div>
+          </Link>
           <button
             onClick={onClose}
             className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"

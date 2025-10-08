@@ -26,15 +26,21 @@ export function useToastContext() {
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [sidebarHovered, setSidebarHovered] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const pathname = usePathname()
   const toast = useToast()
+
+  // Pages where sidebar should auto-hide
+  const autoHidePages = ['/dashboard/transactions', '/dashboard/notifications', '/dashboard/documents']
 
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 1024)
       if (window.innerWidth >= 1024) {
-        setSidebarOpen(true)
+        // On desktop, show sidebar by default unless on auto-hide pages
+        const shouldAutoHide = autoHidePages.some(page => pathname.startsWith(page))
+        setSidebarOpen(!shouldAutoHide)
       } else {
         setSidebarOpen(false)
       }
@@ -43,7 +49,19 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     checkMobile()
     window.addEventListener('resize', checkMobile)
     return () => window.removeEventListener('resize', checkMobile)
-  }, [])
+  }, [pathname])
+
+  // Auto-hide sidebar on specific pages
+  useEffect(() => {
+    if (!isMobile) {
+      const shouldAutoHide = autoHidePages.some(page => pathname.startsWith(page))
+      if (shouldAutoHide && !sidebarHovered) {
+        setSidebarOpen(false)
+      } else if (!shouldAutoHide) {
+        setSidebarOpen(true)
+      }
+    }
+  }, [pathname, isMobile, sidebarHovered])
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen)
@@ -76,6 +94,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           <Sidebar 
             isOpen={sidebarOpen} 
             onClose={closeSidebar}
+            onMouseEnter={() => setSidebarHovered(true)}
+            onMouseLeave={() => setSidebarHovered(false)}
           />
 
           {/* Main Content */}
