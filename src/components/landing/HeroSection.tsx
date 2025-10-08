@@ -11,7 +11,7 @@ export default function HeroSection() {
           {/* Badge */}
           <div className="inline-flex items-center px-4 py-2 rounded-full bg-blue-100 text-blue-800 text-sm font-medium mb-8">
             <CheckCircle className="w-4 h-4 mr-2" />
-            Trusted by 500+ Real Estate Professionals
+            Trusted by Real Estate Professionals
           </div>
 
           {/* Main Headline */}

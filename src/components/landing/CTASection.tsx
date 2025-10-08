@@ -11,11 +11,11 @@ export default function CTASection() {
     },
     {
       icon: Users,
-      text: 'Join 500+ real estate professionals'
+      text: 'Join real estate professionals'
     },
     {
       icon: TrendingUp,
-      text: 'Increase closing efficiency by 40%'
+      text: 'Increase closing efficiency'
     },
     {
       icon: Shield,
@@ -34,7 +34,7 @@ export default function CTASection() {
         </h2>
         
         <p className="text-xl md:text-2xl text-blue-100 mb-12 leading-relaxed">
-          Join hundreds of successful real estate professionals who are closing more deals, 
+          Join successful real estate professionals who are closing more deals, 
           keeping clients happy, and growing their business with CloseTrack.
         </p>
 

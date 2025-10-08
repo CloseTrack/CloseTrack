@@ -47,9 +47,9 @@ export default function PricingSection() {
     },
     {
       name: 'Title Company',
-      description: 'Free collaboration tools for title companies',
-      price: 0,
-      period: 'forever',
+      description: 'Professional collaboration tools for title companies',
+      price: 19,
+      period: 'month',
       icon: Crown,
       popular: false,
       features: [
@@ -58,11 +58,11 @@ export default function PricingSection() {
         'Closing coordination tools',
         'Client communication',
         'Deadline reminders',
-        'Basic reporting',
+        'Advanced reporting',
         'Mobile access',
-        'Community support'
+        'Priority support'
       ],
-      cta: 'Get Started Free',
+      cta: 'Start Free Trial',
       color: 'green'
     }
   ]
@@ -153,11 +153,6 @@ export default function PricingSection() {
                         /{plan.period}
                       </span>
                     </div>
-                    {plan.price === 0 && (
-                      <div className="text-green-600 font-semibold mt-2">
-                        Forever Free
-                      </div>
-                    )}
                   </div>
 
                   {/* Features */}
@@ -175,8 +170,6 @@ export default function PricingSection() {
                     <button className={`w-full py-3 px-6 rounded-lg font-semibold transition-all duration-200 ${
                       isPopular
                         ? 'bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl'
-                        : plan.price === 0
-                        ? 'bg-green-600 hover:bg-green-700 text-white'
                         : 'bg-gray-900 hover:bg-gray-800 text-white'
                     }`}>
                       {plan.cta}

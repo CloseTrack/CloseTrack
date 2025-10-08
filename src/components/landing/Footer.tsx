@@ -11,40 +11,21 @@ export default function Footer() {
       title: 'Product',
       links: [
         { name: 'Features', href: '#features' },
-        { name: 'Pricing', href: '#pricing' },
-        { name: 'Integrations', href: '#' },
-        { name: 'API', href: '#' },
-        { name: 'Security', href: '#' }
+        { name: 'Pricing', href: '#pricing' }
       ]
     },
     {
       title: 'Company',
       links: [
         { name: 'About Us', href: '#' },
-        { name: 'Careers', href: '#' },
-        { name: 'Press', href: '#' },
-        { name: 'Blog', href: '#' },
         { name: 'Contact', href: '#contact' }
-      ]
-    },
-    {
-      title: 'Resources',
-      links: [
-        { name: 'Help Center', href: '#' },
-        { name: 'Documentation', href: '#' },
-        { name: 'Training', href: '#' },
-        { name: 'Webinars', href: '#' },
-        { name: 'Status', href: '#' }
       ]
     },
     {
       title: 'Legal',
       links: [
         { name: 'Privacy Policy', href: '#' },
-        { name: 'Terms of Service', href: '#' },
-        { name: 'Cookie Policy', href: '#' },
-        { name: 'GDPR', href: '#' },
-        { name: 'Compliance', href: '#' }
+        { name: 'Terms of Service', href: '#' }
       ]
     }
   ]
@@ -59,7 +40,7 @@ export default function Footer() {
     <footer id="contact" className="bg-gray-900 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12">
           {/* Company Info */}
           <div className="lg:col-span-2">
             <Link href="/" className="flex items-center space-x-2 mb-6">
@@ -78,11 +59,11 @@ export default function Footer() {
             <div className="space-y-3">
               <div className="flex items-center space-x-3 text-gray-400">
                 <Mail className="w-5 h-5" />
-                <span>hello@closetrack.com</span>
+                <span>info.closetrackapp@gmail.com</span>
               </div>
               <div className="flex items-center space-x-3 text-gray-400">
                 <Phone className="w-5 h-5" />
-                <span>+1 (555) 123-4567</span>
+                <span>973-348-5008</span>
               </div>
               <div className="flex items-center space-x-3 text-gray-400">
                 <MapPin className="w-5 h-5" />

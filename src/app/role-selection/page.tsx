@@ -38,27 +38,21 @@ export default function RoleSelectionPage() {
 
   const roles = [
     {
-      value: 'real_estate_agent',
+      value: 'agent',
       label: 'Real Estate Agent',
       description: 'Manage transactions, clients, and deals',
       icon: '🏠'
     },
     {
-      value: 'buyer',
-      label: 'Buyer',
-      description: 'Track your home buying process',
-      icon: '🔍'
+      value: 'broker',
+      label: 'Real Estate Broker',
+      description: 'Manage multiple agents and oversee transactions',
+      icon: '🏢'
     },
     {
-      value: 'seller',
-      label: 'Seller',
-      description: 'Monitor your home selling progress',
-      icon: '📈'
-    },
-    {
-      value: 'title_insurance_agent',
-      label: 'Title Insurance Agent',
-      description: 'Collaborate on transaction documentation',
+      value: 'title_company',
+      label: 'Title Company',
+      description: 'Collaborate on transaction documentation and closing',
       icon: '📋'
     }
   ]
@@ -162,7 +156,7 @@ export default function RoleSelectionPage() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {roles.map((role) => (
             <button
               key={role.value}

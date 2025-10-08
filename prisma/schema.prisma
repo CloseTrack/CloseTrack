@@ -12,10 +12,9 @@ datasource db {
 }
 
 enum UserRole {
-  real_estate_agent
-  buyer
-  seller
-  title_insurance_agent
+  agent
+  broker
+  title_company
 }
 
 enum TransactionStatus {
