@@ -202,7 +202,7 @@ export default function PremiumDashboardOverview({ data, user }: PremiumDashboar
                   </div>
                 </div>
                 <div className="min-w-0">
-                  <p className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 truncate" title={stat.value}>
+                  <p className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 truncate" title={String(stat.value)}>
                     {stat.value}
                   </p>
                   <p className="text-xs sm:text-sm text-gray-600 truncate">{stat.name}</p>
