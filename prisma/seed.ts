@@ -23,7 +23,7 @@ async function main() {
       email: 'agent@closetrack.app',
       firstName: 'Sarah',
       lastName: 'Johnson',
-      role: UserRole.real_estate_agent,
+      role: UserRole.agent,
       phone: '+1 (555) 123-4567',
       companyName: 'Prime Realty Group',
       licenseNumber: 'NJ12345678',
@@ -32,37 +32,24 @@ async function main() {
   })
   console.log('✅ Created Real Estate Agent:', agentDemo.email)
 
-  // Buyer Demo Account
-  const buyerDemo = await prisma.user.upsert({
-    where: { email: 'buyer@closetrack.app' },
+  // Broker Demo Account
+  const brokerDemo = await prisma.user.upsert({
+    where: { email: 'broker@closetrack.app' },
     update: {},
     create: {
-      email: 'buyer@closetrack.app',
+      email: 'broker@closetrack.app',
       firstName: 'Michael',
       lastName: 'Chen',
-      role: UserRole.buyer,
+      role: UserRole.broker,
       phone: '+1 (555) 234-5678',
+      companyName: 'Elite Realty Group',
+      licenseNumber: 'NJ-BR-87654',
       isActive: true
     }
   })
-  console.log('✅ Created Buyer:', buyerDemo.email)
+  console.log('✅ Created Broker:', brokerDemo.email)
 
-  // Seller Demo Account
-  const sellerDemo = await prisma.user.upsert({
-    where: { email: 'seller@closetrack.app' },
-    update: {},
-    create: {
-      email: 'seller@closetrack.app',
-      firstName: 'Jennifer',
-      lastName: 'Martinez',
-      role: UserRole.seller,
-      phone: '+1 (555) 345-6789',
-      isActive: true
-    }
-  })
-  console.log('✅ Created Seller:', sellerDemo.email)
-
-  // Title Insurance Agent Demo Account
+  // Title Company Demo Account
   const titleDemo = await prisma.user.upsert({
     where: { email: 'title@closetrack.app' },
     update: {},
@@ -70,14 +57,14 @@ async function main() {
       email: 'title@closetrack.app',
       firstName: 'Robert',
       lastName: 'Williams',
-      role: UserRole.title_insurance_agent,
+      role: UserRole.title_company,
       phone: '+1 (555) 456-7890',
       companyName: 'Secure Title Insurance Co.',
       licenseNumber: 'TI-NJ-98765',
       isActive: true
     }
   })
-  console.log('✅ Created Title Insurance Agent:', titleDemo.email)
+  console.log('✅ Created Title Company:', titleDemo.email)
 
   // ========================================
   // 2. CREATE TRANSACTIONS FOR AGENT
@@ -213,164 +200,7 @@ async function main() {
   }
 
   // ========================================
-  // 3. CREATE TRANSACTIONS FOR BUYER
-  // ========================================
-  
-  console.log('\n🔍 Creating buyer transaction...')
-  
-  const buyerTransaction = await prisma.transaction.create({
-    data: {
-      title: '999 Willow Court, Highland Park NJ - Buyer View',
-      description: 'Your dream home purchase in progress',
-      propertyAddress: '999 Willow Court',
-      propertyCity: 'Highland Park',
-      propertyState: 'NJ',
-      propertyZip: '08904',
-      status: 'MORTGAGE_COMMITMENT',
-      listingPrice: 515000,
-      salePrice: 505000,
-      commission: 3.0,
-      contractDate: new Date('2024-01-10'),
-      closingDate: new Date('2024-03-20'),
-      inspectionDate: new Date('2024-01-18'),
-      appraisalDate: new Date('2024-02-01'),
-      mortgageCommitmentDate: new Date('2024-02-15'),
-      agentId: agentDemo.id // Real agent handling the transaction
-    }
-  })
-  console.log('✅ Created buyer transaction:', buyerTransaction.title)
-
-  // Add buyer as participant
-  await prisma.transactionParticipant.create({
-    data: {
-      transactionId: buyerTransaction.id,
-      userId: buyerDemo.id,
-      role: 'buyer',
-    }
-  })
-
-  // Create buyer-specific deadlines
-  await prisma.deadline.create({
-    data: {
-      transactionId: buyerTransaction.id,
-      title: 'Mortgage Pre-Approval',
-      description: 'Submit mortgage pre-approval documents',
-      dueDate: new Date('2024-02-10'),
-      isCompleted: true,
-      completedAt: new Date('2024-02-08'),
-    }
-  })
-
-  await prisma.deadline.create({
-    data: {
-      transactionId: buyerTransaction.id,
-      title: 'Final Walkthrough',
-      description: 'Schedule your final walkthrough before closing',
-      dueDate: new Date('2024-03-18'),
-      isCompleted: false,
-    }
-  })
-
-  // Create buyer notifications
-  await prisma.notification.create({
-    data: {
-      userId: buyerDemo.id,
-      type: 'MILESTONE',
-      title: 'Mortgage Approved! 🎉',
-      message: 'Your mortgage commitment has been received. Closing is scheduled for March 20th.',
-      isRead: false
-    }
-  })
-
-  await prisma.notification.create({
-    data: {
-      userId: buyerDemo.id,
-      type: 'DEADLINE',
-      title: 'Final Walkthrough Coming Up',
-      message: 'Don\'t forget to schedule your final walkthrough at 999 Willow Court',
-      isRead: false
-    }
-  })
-
-  // ========================================
-  // 4. CREATE TRANSACTIONS FOR SELLER
-  // ========================================
-  
-  console.log('\n📈 Creating seller transaction...')
-  
-  const sellerTransaction = await prisma.transaction.create({
-    data: {
-      title: '777 Cedar Lane, Franklin Township NJ - Seller View',
-      description: 'Your home listing',
-      propertyAddress: '777 Cedar Lane',
-      propertyCity: 'Franklin Township',
-      propertyState: 'NJ',
-      propertyZip: '08873',
-      status: 'ATTORNEY_REVIEW',
-      listingPrice: 449000,
-      salePrice: 445000,
-      commission: 3.0,
-      contractDate: new Date('2024-02-05'),
-      closingDate: new Date('2024-04-01'),
-      attorneyReviewDate: new Date('2024-02-12'),
-      agentId: agentDemo.id // Real agent handling the transaction
-    }
-  })
-  console.log('✅ Created seller transaction:', sellerTransaction.title)
-
-  // Add seller as participant
-  await prisma.transactionParticipant.create({
-    data: {
-      transactionId: sellerTransaction.id,
-      userId: sellerDemo.id,
-      role: 'seller',
-    }
-  })
-
-  // Create seller-specific deadlines
-  await prisma.deadline.create({
-    data: {
-      transactionId: sellerTransaction.id,
-      title: 'Repair Completion',
-      description: 'Complete agreed-upon repairs from home inspection',
-      dueDate: new Date('2024-03-15'),
-      isCompleted: false,
-    }
-  })
-
-  await prisma.deadline.create({
-    data: {
-      transactionId: sellerTransaction.id,
-      title: 'Move-Out Date',
-      description: 'Property must be vacated by this date',
-      dueDate: new Date('2024-03-30'),
-      isCompleted: false,
-    }
-  })
-
-  // Create seller notifications
-  await prisma.notification.create({
-    data: {
-      userId: sellerDemo.id,
-      type: 'OFFER',
-      title: 'Offer Accepted!',
-      message: 'Congratulations! Your offer of $445,000 has been accepted.',
-      isRead: false
-    }
-  })
-
-  await prisma.notification.create({
-    data: {
-      userId: sellerDemo.id,
-      type: 'DEADLINE',
-      title: 'Repair Deadline Approaching',
-      message: 'Repairs must be completed by March 15th',
-      isRead: false
-    }
-  })
-
-  // ========================================
-  // 5. CREATE NOTIFICATIONS FOR AGENT
+  // 3. CREATE NOTIFICATIONS FOR AGENT
   // ========================================
   
   console.log('\n📬 Creating agent notifications...')
@@ -412,16 +242,14 @@ async function main() {
   console.log('   - 5 transactions (various stages)')
   console.log('   - Multiple deadlines and activities')
   console.log('   - $2.2M+ in transaction volume')
-  console.log('\n🔍 Buyer: buyer@closetrack.app')
-  console.log('   - 1 active purchase')
-  console.log('   - Mortgage commitment stage')
-  console.log('   - $505K purchase price')
-  console.log('\n📈 Seller: seller@closetrack.app')
-  console.log('   - 1 active listing')
-  console.log('   - Attorney review stage')
-  console.log('   - $445K sale price')
-  console.log('\n📋 Title Agent: title@closetrack.app')
-  console.log('   - Ready for collaboration')
+  console.log('\n🏢 Broker: broker@closetrack.app')
+  console.log('   - Multi-agent management capabilities')
+  console.log('   - Advanced analytics and reporting')
+  console.log('   - Team oversight features')
+  console.log('\n📋 Title Company: title@closetrack.app')
+  console.log('   - Professional collaboration tools')
+  console.log('   - Document management')
+  console.log('   - Closing coordination')
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
 }
 
