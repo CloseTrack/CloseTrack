@@ -87,7 +87,7 @@ export default async function TransactionPage({ params }: TransactionPageProps) 
         }
         },
         orderBy: {
-          order: 'asc'
+          createdAt: 'asc'
         }
       },
       activities: {
