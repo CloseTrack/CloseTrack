@@ -1,9 +1,19 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Inter, Poppins } from 'next/font/google'
 import { ClerkProvider } from '@clerk/nextjs'
+import DashboardLayout from '@/components/layout/DashboardLayout'
 import './globals.css'
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ 
+  subsets: ['latin'],
+  variable: '--font-inter',
+})
+
+const poppins = Poppins({ 
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700', '800'],
+  variable: '--font-poppins',
+})
 
 export const metadata: Metadata = {
   title: 'CloseTrack - Real Estate Transaction Management',
@@ -31,8 +41,10 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className={inter.className}>
-          {children}
+        <body className={`${inter.variable} ${poppins.variable} font-sans antialiased`}>
+          <DashboardLayout>
+            {children}
+          </DashboardLayout>
         </body>
       </html>
     </ClerkProvider>

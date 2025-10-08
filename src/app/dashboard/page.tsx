@@ -1,6 +1,6 @@
 import { requireAuth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import DashboardOverview from '@/components/dashboard/DashboardOverview'
+import PremiumDashboardOverview from '@/components/dashboard/PremiumDashboardOverview'
 import { formatCurrency } from '@/lib/utils'
 
 export default async function DashboardPage() {
@@ -107,38 +107,29 @@ export default async function DashboardPage() {
     }
 
     return (
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-gray-600 mt-2">
-            Welcome back, {user.firstName || 'User'} {user.lastName || 'Name'}!
-          </p>
-        </div>
-
-        <DashboardOverview
-          data={{
-            activeTransactions,
-            totalRevenue: Number(totalRevenue._sum.salePrice) || 0,
-            upcomingDeadlines,
-            recentActivities: recentActivities.map(activity => ({
-              id: activity.id,
-              type: activity.type,
-              title: activity.transaction.title,
-              description: activity.description,
-              createdAt: activity.createdAt,
-              transaction: {
-                id: activity.transaction.title, // Using title as ID for now
-                title: activity.transaction.title
-              },
-              user: {
-                firstName: activity.user.firstName,
-                lastName: activity.user.lastName
-              }
-            }))
-          }}
-          userRole={user.role}
-        />
-      </div>
+      <PremiumDashboardOverview
+        data={{
+          activeTransactions,
+          totalRevenue: Number(totalRevenue._sum.salePrice) || 0,
+          upcomingDeadlines,
+          recentActivities: recentActivities.map(activity => ({
+            id: activity.id,
+            type: activity.type,
+            title: activity.transaction.title,
+            description: activity.description,
+            createdAt: activity.createdAt,
+            transaction: {
+              id: activity.transaction.title, // Using title as ID for now
+              title: activity.transaction.title
+            },
+            user: {
+              firstName: activity.user.firstName,
+              lastName: activity.user.lastName
+            }
+          }))
+        }}
+        user={user}
+      />
     )
   } catch (error) {
     console.error('Dashboard error:', error)
