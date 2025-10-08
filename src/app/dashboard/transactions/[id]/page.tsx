@@ -1,7 +1,7 @@
 import { requireAuth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { notFound } from 'next/navigation'
-import TransactionDetails from '@/components/transactions/TransactionDetails'
+import PremiumTransactionDetails from '@/components/transactions/PremiumTransactionDetails'
 
 interface TransactionPageProps {
   params: {
@@ -111,8 +111,6 @@ export default async function TransactionPage({ params }: TransactionPageProps) 
   }
 
   return (
-    <div className="space-y-6">
-      <TransactionDetails transaction={transaction} user={user} />
-    </div>
+    <PremiumTransactionDetails transaction={transaction} user={user} />
   )
 }

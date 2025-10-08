@@ -1,8 +1,7 @@
 import { requireAuth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { UserRole } from '@prisma/client'
-import TransactionList from '@/components/transactions/TransactionList'
-import TransactionFilters from '@/components/transactions/TransactionFilters'
+import PremiumTransactionList from '@/components/transactions/PremiumTransactionList'
 
 export default async function TransactionsPage() {
   const user = await requireAuth()
@@ -43,7 +42,8 @@ export default async function TransactionsPage() {
       agent: {
         select: {
           firstName: true,
-          lastName: true
+          lastName: true,
+          email: true
         }
       },
       participants: {
@@ -66,13 +66,19 @@ export default async function TransactionsPage() {
         }
       },
       deadlines: {
-        where: {
-          isCompleted: false
-        },
         select: {
           id: true,
           title: true,
           dueDate: true,
+          isCompleted: true,
+        }
+      },
+      activities: {
+        select: {
+          id: true,
+          type: true,
+          description: true,
+          createdAt: true
         }
       },
       _count: {
@@ -88,21 +94,6 @@ export default async function TransactionsPage() {
   })
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Transactions</h1>
-          <p className="text-gray-600 mt-2">
-            Manage your real estate transactions and track progress
-          </p>
-        </div>
-        <button className="btn-primary">
-          Create Transaction
-        </button>
-      </div>
-
-      <TransactionFilters />
-      <TransactionList transactions={transactions} userRole={user.role} />
-    </div>
+    <PremiumTransactionList transactions={transactions} userRole={user.role} />
   )
 }
