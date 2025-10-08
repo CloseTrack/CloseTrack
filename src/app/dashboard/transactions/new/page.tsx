@@ -144,6 +144,7 @@ export default function NewTransactionPage() {
         ...prev,
         documents: [...prev.documents, ...Array.from(files)]
       }))
+    }
   }
 
   const removeDocument = (index: number) => {
