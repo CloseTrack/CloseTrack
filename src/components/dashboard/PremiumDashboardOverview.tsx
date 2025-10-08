@@ -21,6 +21,7 @@ import {
 import { formatCurrency } from '@/lib/utils'
 import { formatDistanceToNow } from 'date-fns'
 import Link from 'next/link'
+import AnimatedProgress from '@/components/ui/AnimatedProgress'
 
 interface PremiumDashboardOverviewProps {
   data: {
@@ -347,16 +348,12 @@ export default function PremiumDashboardOverview({ data, user }: PremiumDashboar
                     </div>
                     <p className="text-sm text-gray-600 mt-1">{deal.client}</p>
                     <div className="mt-3">
-                      <div className="flex items-center justify-between text-sm text-gray-600 mb-1">
-                        <span>Progress</span>
-                        <span>{deal.progress}%</span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div
-                          className="bg-gradient-primary h-2 rounded-full transition-all duration-300"
-                          style={{ width: `${deal.progress}%` }}
-                        />
-                      </div>
+                      <AnimatedProgress
+                        progress={deal.progress}
+                        size="sm"
+                        showPercentage={true}
+                        animated={true}
+                      />
                     </div>
                   </div>
                   <div className="text-right ml-6">
