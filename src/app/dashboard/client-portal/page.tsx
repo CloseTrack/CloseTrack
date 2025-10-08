@@ -61,8 +61,7 @@ export default async function ClientPortalPage() {
           id: true,
           title: true,
           dueDate: true,
-          isCompleted: true,
-          isCritical: true
+          isCompleted: true
         }
       },
       activities: {
@@ -75,7 +74,6 @@ export default async function ClientPortalPage() {
         select: {
           id: true,
           type: true,
-          title: true,
           description: true,
           createdAt: true,
           user: {

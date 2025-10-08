@@ -73,7 +73,6 @@ export default async function TransactionsPage() {
           id: true,
           title: true,
           dueDate: true,
-          isCritical: true
         }
       },
       _count: {

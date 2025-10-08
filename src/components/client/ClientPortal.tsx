@@ -63,12 +63,10 @@ interface ClientPortalProps {
       title: string
       dueDate: Date
       isCompleted: boolean
-      isCritical: boolean
     }>
     activities: Array<{
       id: string
       type: string
-      title: string
       description?: string | null
       createdAt: Date
       user: {

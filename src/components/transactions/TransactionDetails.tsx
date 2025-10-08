@@ -86,8 +86,6 @@ interface TransactionDetailsProps {
       dueDate: Date
       isCompleted: boolean
       completedAt?: Date | null
-      isCritical: boolean
-      reminderSent: boolean
       completedBy?: {
         firstName: string | null
         lastName: string | null

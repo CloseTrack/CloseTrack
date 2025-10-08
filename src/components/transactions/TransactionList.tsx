@@ -48,7 +48,6 @@ interface TransactionListProps {
       id: string
       title: string
       dueDate: Date
-      isCritical: boolean
     }>
     _count: {
       activities: number
