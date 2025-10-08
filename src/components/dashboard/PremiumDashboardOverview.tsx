@@ -173,7 +173,7 @@ export default function PremiumDashboardOverview({ data, user }: PremiumDashboar
       </motion.div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6">
         {stats.map((stat, index) => {
           const Icon = stat.icon
           return (
@@ -182,28 +182,30 @@ export default function PremiumDashboardOverview({ data, user }: PremiumDashboar
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="group relative overflow-hidden rounded-2xl bg-white p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300"
+              className="group relative overflow-hidden rounded-2xl bg-white p-4 sm:p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 min-w-0"
             >
               <div className="absolute inset-0 bg-gradient-to-br from-white/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               <div className="relative">
-                <div className="flex items-center justify-between">
-                  <div className={`p-3 rounded-xl ${stat.bgColor}`}>
-                    <Icon className={`h-6 w-6 ${stat.color}`} />
+                <div className="flex items-center justify-between mb-3">
+                  <div className={`p-2 sm:p-3 rounded-xl ${stat.bgColor} flex-shrink-0`}>
+                    <Icon className={`h-5 w-5 sm:h-6 sm:w-6 ${stat.color}`} />
                   </div>
-                  <div className={`flex items-center space-x-1 text-sm font-medium ${
+                  <div className={`flex items-center space-x-1 text-xs sm:text-sm font-medium ${
                     stat.changeType === 'positive' ? 'text-emerald-600' : 'text-red-600'
                   }`}>
                     {stat.changeType === 'positive' ? (
-                      <ArrowUpRight className="h-4 w-4" />
+                      <ArrowUpRight className="h-3 w-3 sm:h-4 sm:w-4" />
                     ) : (
-                      <ArrowDownRight className="h-4 w-4" />
+                      <ArrowDownRight className="h-3 w-3 sm:h-4 sm:w-4" />
                     )}
-                    <span>{stat.change}</span>
+                    <span className="truncate">{stat.change}</span>
                   </div>
                 </div>
-                <div className="mt-4">
-                  <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
-                  <p className="text-sm text-gray-600">{stat.name}</p>
+                <div className="min-w-0">
+                  <p className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 truncate" title={stat.value}>
+                    {stat.value}
+                  </p>
+                  <p className="text-xs sm:text-sm text-gray-600 truncate">{stat.name}</p>
                 </div>
               </div>
             </motion.div>
@@ -283,7 +285,13 @@ export default function PremiumDashboardOverview({ data, user }: PremiumDashboar
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-gray-900">
-                          {activity.type}
+                          {activity.type === 'status_change' ? 'Status Change' : 
+                           activity.type === 'document_upload' ? 'Document Upload' :
+                           activity.type === 'deadline_created' ? 'Deadline Created' :
+                           activity.type === 'deadline_completed' ? 'Deadline Completed' :
+                           activity.type === 'participant_added' ? 'Participant Added' :
+                           activity.type === 'comment_added' ? 'Comment Added' :
+                           activity.type.charAt(0).toUpperCase() + activity.type.slice(1).replace(/_/g, ' ')}
                         </p>
                         <p className="text-sm text-gray-600 mt-1">
                           {activity.description || activity.title}

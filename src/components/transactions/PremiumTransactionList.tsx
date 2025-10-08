@@ -144,7 +144,6 @@ const statusConfig = {
 }
 
 export default function PremiumTransactionList({ transactions, userRole }: PremiumTransactionListProps) {
-  const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
   const [sortBy, setSortBy] = useState('updatedAt')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
@@ -152,14 +151,9 @@ export default function PremiumTransactionList({ transactions, userRole }: Premi
 
   const filteredTransactions = transactions
     .filter(transaction => {
-      const matchesSearch = transaction.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           transaction.propertyAddress.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           transaction.agent.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           transaction.agent.lastName?.toLowerCase().includes(searchTerm.toLowerCase())
-      
       const matchesStatus = statusFilter === 'all' || transaction.status === statusFilter
       
-      return matchesSearch && matchesStatus
+      return matchesStatus
     })
     .sort((a, b) => {
       let aValue: any, bValue: any
@@ -231,23 +225,9 @@ export default function PremiumTransactionList({ transactions, userRole }: Premi
         </Link>
       </div>
 
-      {/* Filters and Search */}
+      {/* Filters */}
       <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-6">
         <div className="flex flex-col lg:flex-row lg:items-center space-y-4 lg:space-y-0 lg:space-x-4">
-          {/* Search */}
-          <div className="flex-1 relative">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Search className="h-5 w-5 text-gray-400" />
-            </div>
-              <input
-                type="text"
-                placeholder="Search deals, properties, clients..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="input-primary pl-10 mobile-button"
-              />
-          </div>
-
           {/* Status Filter */}
           <select
             value={statusFilter}
@@ -296,12 +276,12 @@ export default function PremiumTransactionList({ transactions, userRole }: Premi
       {/* Transactions Grid */}
       <AnimatePresence mode="wait">
         <motion.div
-          key={`${viewMode}-${searchTerm}-${statusFilter}-${sortBy}-${sortOrder}`}
+          key={`${viewMode}-${statusFilter}-${sortBy}-${sortOrder}`}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.3 }}
-          className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6"
+          className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6"
         >
           {filteredTransactions.map((transaction, index) => {
             const statusConfig = getStatusConfig(transaction.status)
@@ -315,23 +295,23 @@ export default function PremiumTransactionList({ transactions, userRole }: Premi
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="card-interactive group"
+                className="card-interactive group min-w-0"
               >
                 {/* Header */}
                 <div className="flex items-start justify-between mb-4">
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-gray-900 text-lg mb-1">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-gray-900 text-lg mb-1 truncate" title={transaction.title}>
                       {transaction.title}
                     </h3>
                     <div className="flex items-center text-sm text-gray-600">
-                      <MapPin className="h-4 w-4 mr-1" />
-                      <span>
+                      <MapPin className="h-4 w-4 mr-1 flex-shrink-0" />
+                      <span className="truncate">
                         {transaction.propertyAddress}, {transaction.propertyCity}, {transaction.propertyState}
                       </span>
                     </div>
                   </div>
                   
-                  <div className="relative">
+                  <div className="relative flex-shrink-0 ml-2">
                     <button className="p-2 rounded-lg hover:bg-gray-100 transition-colors">
                       <MoreVertical className="h-4 w-4 text-gray-400" />
                     </button>
@@ -446,8 +426,8 @@ export default function PremiumTransactionList({ transactions, userRole }: Premi
           </div>
           <h3 className="text-lg font-semibold text-gray-900 mb-2">No deals found</h3>
           <p className="text-gray-600 mb-6">
-            {searchTerm || statusFilter !== 'all' 
-              ? 'Try adjusting your search or filters'
+            {statusFilter !== 'all' 
+              ? 'Try adjusting your filters'
               : 'Get started by creating your first deal'
             }
           </p>
