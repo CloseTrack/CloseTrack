@@ -62,7 +62,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         <main className={`flex-1 transition-all duration-300 ${
           isMobile ? 'ml-0' : sidebarOpen ? 'ml-72' : 'ml-0'
         }`}>
-          <div className="p-6 lg:p-8">
+          <div className="p-4 sm:p-6 lg:p-8">
             <AnimatePresence mode="wait">
               <motion.div
                 key={pathname}

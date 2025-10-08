@@ -162,10 +162,11 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="w-full flex items-center justify-center space-x-2 px-4 py-3 bg-gradient-primary text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
+            className="w-full flex items-center justify-center space-x-2 px-4 py-3 bg-gradient-primary text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 touch-manipulation"
           >
             <Plus className="h-4 w-4" />
-            <span>New Deal</span>
+            <span className="hidden sm:inline">New Deal</span>
+            <span className="sm:hidden">New</span>
           </motion.button>
         </div>
 
@@ -184,7 +185,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                 <Link
                   href={item.href}
                   onClick={onClose}
-                  className={`group flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
+                  className={`group flex items-center justify-between px-3 py-3 rounded-xl text-sm font-medium transition-all duration-200 touch-manipulation ${
                     isActive
                       ? `${item.bgColor} ${item.color} shadow-sm`
                       : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'

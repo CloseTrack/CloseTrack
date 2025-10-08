@@ -232,27 +232,27 @@ export default function PremiumTransactionList({ transactions, userRole }: Premi
       </div>
 
       {/* Filters and Search */}
-      <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+      <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-6">
         <div className="flex flex-col lg:flex-row lg:items-center space-y-4 lg:space-y-0 lg:space-x-4">
           {/* Search */}
           <div className="flex-1 relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <Search className="h-5 w-5 text-gray-400" />
             </div>
-            <input
-              type="text"
-              placeholder="Search deals, properties, clients..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="input-primary pl-10"
-            />
+              <input
+                type="text"
+                placeholder="Search deals, properties, clients..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="input-primary pl-10 mobile-button"
+              />
           </div>
 
           {/* Status Filter */}
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="input-primary lg:w-48"
+            className="input-primary lg:w-48 mobile-button"
           >
             <option value="all">All Statuses</option>
             {Object.entries(statusConfig).map(([key, config]) => (
@@ -264,7 +264,7 @@ export default function PremiumTransactionList({ transactions, userRole }: Premi
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="input-primary lg:w-40"
+            className="input-primary lg:w-40 mobile-button"
           >
             <option value="updatedAt">Last Updated</option>
             <option value="title">Property Name</option>
@@ -275,7 +275,7 @@ export default function PremiumTransactionList({ transactions, userRole }: Premi
           {/* Sort Order */}
           <button
             onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-            className="p-3 rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors"
+            className="p-3 rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors touch-manipulation min-h-[44px]"
           >
             {sortOrder === 'asc' ? (
               <TrendingUp className="h-5 w-5 text-gray-600" />

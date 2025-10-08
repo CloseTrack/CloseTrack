@@ -72,7 +72,7 @@ export default function Header({ onToggleSidebar, sidebarOpen }: HeaderProps) {
           </div>
 
           {/* Center Section - Search */}
-          <div className="flex-1 max-w-2xl mx-8 hidden md:block">
+          <div className="flex-1 max-w-2xl mx-4 md:mx-8 hidden lg:block">
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Search className="h-5 w-5 text-gray-400" />
@@ -107,7 +107,7 @@ export default function Header({ onToggleSidebar, sidebarOpen }: HeaderProps) {
             {/* Mobile Search */}
             <button
               onClick={() => setSearchOpen(!searchOpen)}
-              className="md:hidden p-2 rounded-xl hover:bg-gray-100 transition-colors"
+              className="lg:hidden p-2 rounded-xl hover:bg-gray-100 transition-colors"
             >
               <Search className="h-5 w-5 text-gray-600" />
             </button>
@@ -167,7 +167,7 @@ export default function Header({ onToggleSidebar, sidebarOpen }: HeaderProps) {
                     <User className="h-4 w-4 text-white" />
                   )}
                 </div>
-                <div className="hidden sm:block text-left">
+                <div className="hidden md:block text-left">
                   <p className="text-sm font-medium text-gray-900">
                     {user?.firstName} {user?.lastName}
                   </p>
@@ -229,7 +229,7 @@ export default function Header({ onToggleSidebar, sidebarOpen }: HeaderProps) {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="md:hidden py-4"
+              className="lg:hidden py-4"
             >
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">

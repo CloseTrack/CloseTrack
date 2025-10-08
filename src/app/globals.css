@@ -196,6 +196,34 @@
   .hover-scale {
     @apply transition-all duration-200 hover:scale-105;
   }
+  
+  /* Touch Optimization */
+  .touch-manipulation {
+    touch-action: manipulation;
+  }
+  
+  .touch-none {
+    touch-action: none;
+  }
+  
+  /* Mobile-specific optimizations */
+  @media (max-width: 768px) {
+    .mobile-padding {
+      @apply px-4 py-3;
+    }
+    
+    .mobile-text {
+      @apply text-sm;
+    }
+    
+    .mobile-button {
+      @apply py-3 px-4 text-base min-h-[44px] touch-manipulation;
+    }
+    
+    .mobile-card {
+      @apply rounded-xl p-4;
+    }
+  }
 }
 
 @layer utilities {
