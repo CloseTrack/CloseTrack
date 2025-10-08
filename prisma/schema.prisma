@@ -53,7 +53,7 @@ model User {
   firstName         String?
   lastName          String?
   phone             String?
-  role              UserRole  @default(real_estate_agent)
+  role              UserRole  @default(agent)
   companyName       String?
   licenseNumber     String?
   profileImageUrl   String?
