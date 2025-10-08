@@ -1,6 +1,6 @@
 import { requireAuth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import ClientPortal from '@/components/client/ClientPortal'
+import PremiumClientPortal from '@/components/client/PremiumClientPortal'
 
 export default async function ClientPortalPage() {
   const user = await requireAuth()
@@ -35,42 +35,29 @@ export default async function ClientPortalPage() {
         }
       },
       documents: {
-        where: {
-          // Only show documents client should see
-          type: {
-            in: ['CONTRACT', 'INSPECTION_REPORT', 'APPRAISAL', 'CLOSING_DOCUMENT']
-          }
-        },
         select: {
           id: true,
           title: true,
           type: true,
           fileName: true,
+          fileUrl: true,
+          fileSize: true,
           createdAt: true,
-          isSigned: true
+          isSigned: true,
+          signedAt: true
         }
       },
       deadlines: {
-        where: {
-          // Only show deadlines relevant to client
-          title: {
-            contains: 'client'
-          }
-        },
         select: {
           id: true,
           title: true,
+          description: true,
           dueDate: true,
-          isCompleted: true
+          isCompleted: true,
+          completedAt: true
         }
       },
       activities: {
-        where: {
-          // Only show client-relevant activities
-          type: {
-            in: ['status_change', 'document_upload', 'note']
-          }
-        },
         select: {
           id: true,
           type: true,
@@ -85,8 +72,7 @@ export default async function ClientPortalPage() {
         },
         orderBy: {
           createdAt: 'desc'
-        },
-        take: 10
+        }
       }
     },
     orderBy: {
@@ -95,8 +81,6 @@ export default async function ClientPortalPage() {
   })
 
   return (
-    <div className="space-y-6">
-      <ClientPortal transactions={transactions} user={user} />
-    </div>
+    <PremiumClientPortal transactions={transactions} user={user} />
   )
 }
