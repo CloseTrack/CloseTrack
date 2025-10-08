@@ -44,8 +44,8 @@ interface Transaction {
   propertyCity: string
   propertyState: string
   propertyZip: string
-  salePrice?: number | null
-  commission?: number | null
+  salePrice?: any | null // Prisma Decimal type
+  commission?: any | null // Prisma Decimal type
   contractDate?: Date | null
   closingDate?: Date | null
   inspectionDate?: Date | null

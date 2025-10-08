@@ -47,8 +47,8 @@ interface Transaction {
   propertyCity: string
   propertyState: string
   propertyZip: string
-  salePrice?: number | null
-  commission?: number | null
+  salePrice?: any | null // Prisma Decimal type
+  commission?: any | null // Prisma Decimal type
   contractDate?: Date | null
   closingDate?: Date | null
   createdAt: Date
@@ -368,7 +368,7 @@ export default function PremiumClientPortal({ transactions, user }: PremiumClien
                           {transaction.salePrice && (
                             <div className="flex items-center space-x-1">
                               <DollarSign className="h-4 w-4" />
-                              <span>{formatCurrency(transaction.salePrice)}</span>
+                              <span>{formatCurrency(Number(transaction.salePrice))}</span>
                             </div>
                           )}
                         </div>
@@ -588,7 +588,7 @@ export default function PremiumClientPortal({ transactions, user }: PremiumClien
                           <div className="flex justify-between">
                             <span className="text-sm text-gray-600">Sale Price:</span>
                             <span className="text-sm font-medium text-gray-900">
-                              {formatCurrency(selectedTransaction.salePrice)}
+                              {formatCurrency(Number(selectedTransaction.salePrice))}
                             </span>
                           </div>
                         )}
