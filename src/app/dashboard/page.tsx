@@ -108,32 +108,6 @@ export default async function DashboardPage() {
       // Continue with default values
     }
 
-    return (
-      <PremiumDashboardOverview
-        data={{
-          activeTransactions,
-          totalRevenue: Number(totalRevenue._sum.salePrice) || 0,
-          upcomingDeadlines,
-          recentActivities: recentActivities.map(activity => ({
-            id: activity.id,
-            type: activity.type,
-            title: activity.transaction.title,
-            description: activity.description,
-            createdAt: activity.createdAt,
-            transaction: {
-              id: activity.transaction.title, // Using title as ID for now
-              title: activity.transaction.title
-            },
-            user: {
-              firstName: activity.user.firstName,
-              lastName: activity.user.lastName
-            }
-          }))
-        }}
-        user={user}
-      />
-    )
-
     // Render role-specific dashboard
     const dashboardData = {
       activeTransactions,
