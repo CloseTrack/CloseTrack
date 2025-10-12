@@ -1,6 +1,8 @@
 import { requireAuth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import PremiumDashboardOverview from '@/components/dashboard/PremiumDashboardOverview'
+import AgentDashboard from '@/components/dashboard/AgentDashboard'
+import BrokerDashboard from '@/components/dashboard/BrokerDashboard'
+import TitleCompanyDashboard from '@/components/dashboard/TitleCompanyDashboard'
 import { formatCurrency } from '@/lib/utils'
 
 export default async function DashboardPage() {
@@ -131,6 +133,38 @@ export default async function DashboardPage() {
         user={user}
       />
     )
+
+    // Render role-specific dashboard
+    const dashboardData = {
+      activeTransactions,
+      totalRevenue: Number(totalRevenue._sum.salePrice || 0),
+      upcomingDeadlines,
+      recentActivities: recentActivities.map((activity: any) => ({
+        id: activity.id,
+        type: activity.type,
+        title: activity.title,
+        description: activity.description,
+        createdAt: activity.createdAt,
+        transaction: {
+          id: activity.transaction.id,
+          title: activity.transaction.title
+        },
+        user: {
+          firstName: activity.user.firstName,
+          lastName: activity.user.lastName
+        }
+      }))
+    }
+
+    // Render different dashboard based on user role
+    if (user.role === 'broker') {
+      return <BrokerDashboard data={dashboardData} user={user} />
+    } else if (user.role === 'title_company') {
+      return <TitleCompanyDashboard data={dashboardData} user={user} />
+    } else {
+      // Default to agent dashboard for 'agent' role and any other roles
+      return <AgentDashboard data={dashboardData} user={user} />
+    }
   } catch (error) {
     console.error('Dashboard error:', error)
     return (
