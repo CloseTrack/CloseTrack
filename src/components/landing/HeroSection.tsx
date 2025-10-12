@@ -1,9 +1,14 @@
 'use client'
 
+import { useState } from 'react'
 import { SignUpButton } from '@clerk/nextjs'
 import { ArrowRight, Play, CheckCircle } from 'lucide-react'
+import DemoVideoModal from '@/components/ui/DemoVideoModal'
 
 export default function HeroSection() {
+  const [showDemoModal, setShowDemoModal] = useState(false)
+  const [selectedRole, setSelectedRole] = useState<'agent' | 'broker' | 'title_company'>('agent')
+
   return (
     <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
@@ -28,7 +33,7 @@ export default function HeroSection() {
           </p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
             <SignUpButton mode="modal">
               <button className="btn-primary text-lg px-8 py-4 flex items-center space-x-2">
                 <span>Start Free Trial</span>
@@ -36,12 +41,52 @@ export default function HeroSection() {
               </button>
             </SignUpButton>
             
-            <button className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors group">
+            <button 
+              onClick={() => setShowDemoModal(true)}
+              className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors group"
+            >
               <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow">
                 <Play className="w-5 h-5 text-blue-600 ml-1" />
               </div>
               <span className="text-lg font-medium">Watch Demo</span>
             </button>
+          </div>
+
+          {/* Role Selector for Demo */}
+          <div className="flex items-center justify-center gap-3 mb-12">
+            <span className="text-sm text-gray-500">View demo for:</span>
+            <div className="inline-flex items-center bg-white rounded-full shadow-md p-1">
+              <button
+                onClick={() => setSelectedRole('agent')}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                  selectedRole === 'agent'
+                    ? 'bg-blue-600 text-white shadow-lg'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                Agent
+              </button>
+              <button
+                onClick={() => setSelectedRole('broker')}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                  selectedRole === 'broker'
+                    ? 'bg-purple-600 text-white shadow-lg'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                Broker
+              </button>
+              <button
+                onClick={() => setSelectedRole('title_company')}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                  selectedRole === 'title_company'
+                    ? 'bg-emerald-600 text-white shadow-lg'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                Title Company
+              </button>
+            </div>
           </div>
 
           {/* Social Proof */}
@@ -124,6 +169,13 @@ export default function HeroSection() {
           </div>
         </div>
       </div>
+
+      {/* Demo Video Modal */}
+      <DemoVideoModal 
+        isOpen={showDemoModal}
+        onClose={() => setShowDemoModal(false)}
+        role={selectedRole}
+      />
     </section>
   )
 }
