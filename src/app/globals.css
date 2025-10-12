@@ -224,6 +224,63 @@
       @apply rounded-xl p-4;
     }
   }
+  
+  /* iOS Safari specific fixes */
+  @supports (-webkit-touch-callout: none) {
+    /* Fix for iOS safe areas */
+    body {
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    
+    /* Prevent zoom on input focus */
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="password"],
+    input[type="number"],
+    input[type="date"],
+    input[type="time"],
+    select,
+    textarea {
+      font-size: 16px !important;
+    }
+    
+    /* Remove iOS tap highlight */
+    * {
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    /* Smooth scrolling for iOS */
+    * {
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Fix for sticky elements on iOS */
+    .sticky {
+      position: -webkit-sticky;
+      position: sticky;
+    }
+  }
+  
+  /* Touch-friendly elements */
+  button,
+  a,
+  [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  
+  /* Prevent double-tap zoom on iOS */
+  a,
+  button,
+  input,
+  textarea,
+  select {
+    touch-action: manipulation;
+  }
 }
 
 @layer utilities {

@@ -1,36 +1,39 @@
-import type { Metadata } from 'next'
+import './globals.css'
+import type { Metadata, Viewport } from 'next'
 import { Inter, Poppins } from 'next/font/google'
 import { ClerkProvider } from '@clerk/nextjs'
 import DashboardLayout from '@/components/layout/DashboardLayout'
-import './globals.css'
 
 const inter = Inter({ 
   subsets: ['latin'],
   variable: '--font-inter',
+  display: 'swap',
 })
 
 const poppins = Poppins({ 
+  weight: ['400', '500', '600', '700'],
   subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700', '800'],
   variable: '--font-poppins',
+  display: 'swap',
 })
 
 export const metadata: Metadata = {
-  title: 'CloseTrack - Real Estate Transaction Management',
-  description: 'Streamline your real estate transactions with CloseTrack. Manage deals, track deadlines, and keep clients updated with our comprehensive transaction management platform.',
-  keywords: 'real estate, transaction management, closing, realtor, broker, title company',
-  authors: [{ name: 'CloseTrack' }],
-  openGraph: {
-    title: 'CloseTrack - Real Estate Transaction Management',
-    description: 'Streamline your real estate transactions with CloseTrack.',
-    type: 'website',
-    locale: 'en_US',
+  title: 'CloseTrack - Close Deals Faster. Track Everything Effortlessly.',
+  description: 'Close Deals Faster. Track everything effortlessly.',
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'CloseTrack',
   },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'CloseTrack - Real Estate Transaction Management',
-    description: 'Streamline your real estate transactions with CloseTrack.',
-  },
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: 'cover',
 }
 
 export default function RootLayout({
@@ -40,8 +43,20 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider>
-      <html lang="en">
-        <body className={`${inter.variable} ${poppins.variable} font-sans antialiased`}>
+      <html lang="en" className={`${inter.variable} ${poppins.variable}`}>
+        <head>
+          {/* iOS Meta Tags */}
+          <meta name="apple-mobile-web-app-capable" content="yes" />
+          <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+          <meta name="apple-mobile-web-app-title" content="CloseTrack" />
+          
+          {/* Disable tap highlight on iOS */}
+          <meta name="format-detection" content="telephone=no" />
+          
+          {/* Prevent text size adjustment on orientation change */}
+          <meta name="mobile-web-app-capable" content="yes" />
+        </head>
+        <body className="antialiased">
           <DashboardLayout>
             {children}
           </DashboardLayout>
