@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { usePathname } from 'next/navigation'
+import { useClerk } from '@clerk/nextjs'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import {
@@ -101,13 +102,19 @@ const secondaryNavigation = [
   },
   {
     name: 'Help & Support',
-    href: '/dashboard/help',
+    href: '/dashboard/settings/help-support',
     icon: HelpCircle,
   },
 ]
 
 export default function Sidebar({ isOpen, onClose, onMouseEnter, onMouseLeave }: SidebarProps) {
   const pathname = usePathname()
+  const { signOut } = useClerk()
+
+  const handleSignOut = async () => {
+    await signOut()
+    window.location.href = '/'
+  }
   const [expandedItems, setExpandedItems] = useState<string[]>([])
 
   const toggleExpanded = (itemName: string) => {
@@ -249,6 +256,7 @@ export default function Sidebar({ isOpen, onClose, onMouseEnter, onMouseLeave }:
 
           {/* Logout */}
           <motion.button
+            onClick={handleSignOut}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             className="group flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-red-600 hover:bg-red-50 transition-all duration-200 w-full"
